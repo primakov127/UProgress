@@ -1,4 +1,7 @@
 {
   "version": 2,
-  "projects": {}
+  "projects": {
+    "app-shell": "packages/app-shell",
+    "uprogress": "packages/uprogress"
+  }
 }
