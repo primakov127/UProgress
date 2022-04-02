@@ -5,7 +5,7 @@ namespace UProgress.Contracts.Messages;
 public class Login
 {
     [Required]
-    public string UserNameOrEmail { get; set; }
+    public string UsernameOrEmail { get; set; }
         
     [Required]
     [MinLength(3)]

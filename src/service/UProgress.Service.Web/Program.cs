@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UProgress.Service.Config.Contexts;
+using UProgress.Service.Services;
 using UProgress.Service.Web.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +58,8 @@ builder.Services.AddCors(options =>
         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
+
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
