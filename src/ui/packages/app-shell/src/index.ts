@@ -3,6 +3,7 @@ export * from './components/AppShell/AppShell';
 
 // Hooks
 export * from './hooks/useEffectAsync';
+export * from './hooks/useLoading';
 
 // Interfaces
 export * from './interfaces/IAppGatewat';
@@ -18,4 +19,3 @@ export * from './models/Test';
 export * from './state/userState';
 export * from './state/loadingState';
 export * from './state/testState';
-

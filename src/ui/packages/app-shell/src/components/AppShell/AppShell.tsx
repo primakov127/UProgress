@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { IAppGateway } from '../../interfaces/IAppGatewat';
 import { appGatewayLoadingState } from '../../state/loadingState';
 import { InitializeState } from '../InitializeState/InitializeState';
+import { useRouteMatch } from 'react-router-dom';
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -11,11 +12,13 @@ type Props = {
 
 export const AppShell = ({ appGateway, children }: Props) => {
   const isLoading = useRecoilValue(appGatewayLoadingState);
+  const isAuthUrl = useRouteMatch('/auth/*');
+  const isAuth = isAuthUrl?.isExact;
 
   return (
     <Container>
-      <InitializeState appGateway={appGateway} />
-      {isLoading ? null : children}
+      {isAuth ? null : <InitializeState appGateway={appGateway} />}
+      {(isLoading && !isAuth) ? null : children}
     </Container>
   );
 };
