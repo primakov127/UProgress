@@ -7,3 +7,11 @@ export const API_URLS = {
     getWeather: '/WeatherForecast',
   },
 };
+
+export const UI_URLS = {
+  auth: {
+    login: '/auth/login',
+    forgotPassword: '/auth/forgotpassword',
+    resetPassword: '/auth/resetpassword',
+  },
+};
