@@ -1,27 +1,35 @@
-import { LockOutlined } from '@ant-design/icons';
+import { MailOutlined } from '@ant-design/icons';
 import { useLoading } from '@ui/app-shell';
 import { Button, Col, Form, Input, notification, Row } from 'antd';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
+import { authService } from '../../services/authService';
 
 export const ForgotScene = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
   const { loading, loadingHandler } = useLoading();
 
   const handleForgot = loadingHandler(async () => {
-    const values = await form.validateFields();
-    const isPasswordEqual = values.password === values.repetedpassword;
-    if (!isPasswordEqual) {
-      notification.error({
-        message: 'Пароли не совподают',
-      });
-      return;
-    }
+    try {
+      const values = await form.validateFields();
+      const email = values.email;
 
-    notification.success({
-      message: 'Вы успешно вошли',
-    });
+      const result = await authService.requestReset({
+        email: email,
+      });
+
+      if (result.isSuccessful) {
+        notification.success({ message: 'Письму выслано на почту' });
+        history.push(UI_URLS.auth.login);
+      }
+    } catch (e: unknown) {
+      if (!axios.isAxiosError(e)) {
+        notification.error({ message: 'Проверьте почту' });
+      }
+    }
   });
 
   return (
@@ -33,24 +41,21 @@ export const ForgotScene = () => {
         <Col xs={24} sm={24} md={24} lg={13}>
           <Row className="formWrapper">
             <Form form={form} onSubmitCapture={handleForgot} size="large">
-              <h1>Восстановление пароля</h1>
+              <h1>Забыли пароль?</h1>
               <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Введите пароль' }]}
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    type: 'email',
+                    message: 'Введите корректный email',
+                  },
+                ]}
               >
-                <Input.Password
-                  placeholder="новый пароль"
-                  prefix={<LockOutlined />}
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="repetedpassword"
-                rules={[{ required: true, message: 'Повторите пароль' }]}
-              >
-                <Input.Password
-                  placeholder="повторите пароль"
-                  prefix={<LockOutlined />}
+                <Input
+                  disabled={loading}
+                  placeholder="ваш email"
+                  prefix={<MailOutlined />}
                 />
               </Form.Item>
 

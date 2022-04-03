@@ -19,7 +19,6 @@ export const deleteCookie = (name: string) => {
 
 export const getAuthTokenFromCookie = () => {
   const authToken = getCookie(COOKIES.authCookie);
-  console.log(authToken);
   if (!authToken) {
     // TODO: redirect to login URL
   }

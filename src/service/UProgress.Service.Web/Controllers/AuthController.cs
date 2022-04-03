@@ -70,7 +70,7 @@ public class AuthController : ControllerBase
             $"{_frontendBaseUrl}/auth/resetpassword/?token={encodedResetToken}&email={message.Email}";
 
         _emailService.SendEmail(message.Email, "UProgress: Восстановление пароля",
-            $"<a href=${passwordResetLink}>Восстановить пароль</a>");
+            $"<a href='{passwordResetLink}'>Восстановить пароль</a>");
 
         return Ok();
     }

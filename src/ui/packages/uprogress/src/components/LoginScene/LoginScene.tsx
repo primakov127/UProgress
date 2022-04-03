@@ -17,7 +17,6 @@ export const LoginScene = () => {
       const values = await form.validateFields();
       const username = values.username;
       const password = values.password;
-      console.log('xxx');
 
       const result = await authService.login({
         usernameOrEmail: username,
