@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UProgress.Service.Config.Contexts;
+using UProgress.Service.Interfaces;
+using UProgress.Service.Services;
 using UProgress.Service.Web.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+var frontendUrl = builder.Configuration.GetValue<string>("FrontendBaseUrl");
 
 // Add services to the container.
 
@@ -54,9 +57,17 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        builder.WithOrigins(frontendUrl).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
+
+builder.Services.AddSingleton<IEmailService>(new EmailService(
+    configuration.GetValue<string>("EmailServiceConfig:SmtpHost"),
+    configuration.GetValue<int>("EmailServiceConfig:Port"),
+    configuration.GetValue<string>("EmailServiceConfig:Email"),
+    configuration.GetValue<string>("EmailServiceConfig:Password"))
+);
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 

@@ -18,6 +18,7 @@
     <ItemGroup>
       <ProjectReference Include="..\UProgress.Contracts\UProgress.Contracts.csproj" />
       <ProjectReference Include="..\UProgress.Service.Config\UProgress.Service.Config.csproj" />
+      <ProjectReference Include="..\UProgress.Service\UProgress.Service.csproj" />
     </ItemGroup>
 
 </Project>

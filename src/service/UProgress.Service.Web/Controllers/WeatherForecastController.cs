@@ -11,7 +11,7 @@ using UProgress.Contracts.Models;
 namespace UProgress.Service.Web.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -52,8 +52,8 @@ public class WeatherForecastController : ControllerBase
             return BadRequest();
         }
 
-        var user = await _userManager.FindByEmailAsync(message.UserNameOrEmail) ??
-                   await _userManager.FindByNameAsync(message.UserNameOrEmail);
+        var user = await _userManager.FindByEmailAsync(message.UsernameOrEmail) ??
+                   await _userManager.FindByNameAsync(message.UsernameOrEmail);
 
         if (user == null)
         {

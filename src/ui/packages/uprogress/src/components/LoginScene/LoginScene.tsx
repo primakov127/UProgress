@@ -3,16 +3,36 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { UI_URLS } from '../../constants';
+import { useLoading } from '@ui/app-shell';
+import { authService } from '../../services/authService';
+import axios from 'axios';
+import { localRedirect } from '../../utils/urlUtils';
 
 export const LoginScene = () => {
   const [form] = Form.useForm();
+  const { loading, loadingHandler } = useLoading();
 
-  const handleLogin = () => {
-    form.validateFields();
-    notification.success({
-      message: 'Вы успешно вошли',
-    });
-  };
+  const handleLogin = loadingHandler(async () => {
+    try {
+      const values = await form.validateFields();
+      const username = values.username;
+      const password = values.password;
+
+      const result = await authService.login({
+        usernameOrEmail: username,
+        password: password,
+      });
+
+      if (result.isSuccessful) {
+        localRedirect(UI_URLS.home);
+      }
+
+    } catch (e: unknown) {
+      if (!axios.isAxiosError(e)) {
+        notification.error({ message: 'Проверьте логин и пароль' });
+      }
+    }
+  });
 
   return (
     <Container>
@@ -29,6 +49,7 @@ export const LoginScene = () => {
                 rules={[{ required: true, message: 'Введите логин или email' }]}
               >
                 <Input
+                  disabled={loading}
                   placeholder="логин или email"
                   prefix={<UserOutlined />}
                 />
@@ -36,15 +57,19 @@ export const LoginScene = () => {
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: 'Введите пароль' }]}
+                rules={[
+                  { required: true, message: 'Введите пароль' },
+                  { min: 3, message: 'Минимальная длина пароля: 3' },
+                ]}
               >
                 <Input.Password
+                  disabled={loading}
                   placeholder="пароль"
                   prefix={<LockOutlined />}
                 />
               </Form.Item>
 
-              <Button block type="primary" htmlType="submit">
+              <Button block type="primary" htmlType="submit" loading={loading}>
                 Войти
               </Button>
 

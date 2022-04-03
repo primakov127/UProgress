@@ -1,18 +1,54 @@
-import { MailOutlined } from '@ant-design/icons';
+import { LockOutlined } from '@ant-design/icons';
+import { useLoading } from '@ui/app-shell';
 import { Button, Col, Form, Input, notification, Row } from 'antd';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
+import { useQuery } from '../../hooks/useQuery';
+import { authService } from '../../services/authService';
 
 export const ResetScene = () => {
   const [form] = Form.useForm();
+  const query = useQuery();
+  const history = useHistory();
+  const { loading, loadingHandler } = useLoading();
 
-  const handleForgot = () => {
-    form.validateFields();
-    notification.success({
-      message: 'Вы успешно вошли',
-    });
-  };
+  const handleForgot = loadingHandler(async () => {
+    try {
+      const values = await form.validateFields();
+      const newPassword = values.password;
+      const email = query.get('email');
+      const token = query.get('token');
+      const isPasswordEqual = newPassword === values.repetedpassword;
+      if (!isPasswordEqual) {
+        notification.error({
+          message: 'Пароли не совподают',
+        });
+        return;
+      }
+
+      if (!token && !email) {
+        notification.error({ message: 'Чувак, что-то тут не чисто' });
+        return;
+      }
+
+      const result = await authService.reset({
+        email: email as string,
+        resetToken: token as string,
+        newPassword: newPassword,
+      });
+
+      if (result.isSuccessful) {
+        notification.success({ message: 'Пароль успешно изменен' });
+        history.push(UI_URLS.auth.login);
+      }
+    } catch (e: unknown) {
+      if (!axios.isAxiosError(e)) {
+        notification.error({ message: 'Проверьте введенные пароли' });
+      }
+    }
+  });
 
   return (
     <Container>
@@ -23,15 +59,31 @@ export const ResetScene = () => {
         <Col xs={24} sm={24} md={24} lg={13}>
           <Row className="formWrapper">
             <Form form={form} onSubmitCapture={handleForgot} size="large">
-              <h1>Забыли пароль?</h1>
+              <h1>Восстановление пароля</h1>
               <Form.Item
-                name="email"
-                rules={[{ required: true, message: 'Введите email' }]}
+                name="password"
+                rules={[
+                  { required: true, message: 'Введите пароль' },
+                  { min: 3, message: 'Минимальная длина пароля: 3' },
+                ]}
               >
-                <Input placeholder="ваш email" prefix={<MailOutlined />} />
+                <Input.Password
+                  placeholder="новый пароль"
+                  prefix={<LockOutlined />}
+                />
               </Form.Item>
 
-              <Button block type="primary" htmlType="submit">
+              <Form.Item
+                name="repetedpassword"
+                rules={[{ required: true, message: 'Повторите пароль' }]}
+              >
+                <Input.Password
+                  placeholder="повторите пароль"
+                  prefix={<LockOutlined />}
+                />
+              </Form.Item>
+
+              <Button block type="primary" htmlType="submit" loading={loading}>
                 Восстановить
               </Button>
 

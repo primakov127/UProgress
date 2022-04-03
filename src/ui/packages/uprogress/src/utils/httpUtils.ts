@@ -1,3 +1,4 @@
+import { notification } from 'antd';
 import axios, { AxiosInstance } from 'axios';
 import { config } from '../config';
 import { getAuthTokenFromCookie } from './cookieUtils';
@@ -23,6 +24,15 @@ const handleUnauthenticatedRequests = (client: AxiosInstance) => {
   client.interceptors.response.use(
     (response) => response,
     (error) => {
+      if (error.response.status === 400) {
+        const errorMessage = error.response.data.error;
+
+        notification.error({
+          message: errorMessage ?? 'Что-то пошло не так...',
+          description: errorMessage ? undefined : 'Попробуйте позже',
+        });
+      }
+
       if (error.response.status === 401) {
         redirectToLogin();
       }
