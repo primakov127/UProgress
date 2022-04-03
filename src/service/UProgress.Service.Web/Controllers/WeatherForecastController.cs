@@ -11,7 +11,7 @@ using UProgress.Contracts.Models;
 namespace UProgress.Service.Web.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]

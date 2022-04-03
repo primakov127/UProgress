@@ -31,7 +31,7 @@ public class AuthService
         {
             return null;
         }
-        
+
         var userClaims = await GetUserRolesClaims(user);
 
         var signatureKey =
@@ -46,6 +46,72 @@ public class AuthService
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
         return tokenString;
+    }
+
+    public async Task<bool> ResetPasswordAsync(string email, string passwordResetToken, string newPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return false;
+        }
+
+        var resetPasswordResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
+        
+        return resetPasswordResult.Succeeded;
+    }
+
+    public async Task<bool> ConfirmEmailAsync(string email, string emailConfirmToken)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return false;
+        }
+
+        var confirmEmailResult = await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
+
+        return confirmEmailResult.Succeeded;
+    }
+
+    public async Task<bool> HasUserEmailConfirmation(string usernameOrEmail)
+    {
+        var user = await _userManager.FindByEmailAsync(usernameOrEmail) ??
+                   await _userManager.FindByNameAsync(usernameOrEmail);
+        if (user == null)
+        {
+            return false;
+        }
+
+        var hasUserEmailConfirmation = await _userManager.IsEmailConfirmedAsync(user);
+
+        return hasUserEmailConfirmation;
+    }
+
+    public async Task<string?> GetPasswordResetTokenAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return null;
+        }
+
+        var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        return passwordResetToken;
+    }
+
+    public async Task<string?> GetEmailConfirmationToken(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return null;
+        }
+
+        var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        return emailConfirmationToken;
     }
 
     private async Task<IList<Claim>?> GetUserRolesClaims(IdentityUser<Guid> user)

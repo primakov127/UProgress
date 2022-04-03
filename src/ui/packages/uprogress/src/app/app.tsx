@@ -7,6 +7,8 @@ import { ForgotScene } from '../components/ForgotScene/ForgotScene';
 import { ResetScene } from '../components/ResetScene/ResetScene';
 import { Route, Switch } from 'react-router';
 import { UI_URLS } from '../constants';
+import { Button } from 'antd';
+import { redirectToLogin } from '../utils/urlUtils';
 
 export const App = () => (
   <RecoilRoot>
@@ -26,7 +28,12 @@ export const App = () => (
 const Test = () => {
   const t = useRecoilValue(testState);
   console.log(t);
-  return <span>{t?.date}</span>;
+  return (
+    <div>
+      <span>{t?.date}</span>
+      <Button onClick={redirectToLogin}>Logout</Button>
+    </div>
+  );
 };
 
 export default App;

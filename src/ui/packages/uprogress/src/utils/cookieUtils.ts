@@ -1,4 +1,4 @@
-import { COOKIES } from "../constants";
+import { COOKIES } from '../constants';
 
 export const getCookie = (name: string) => {
   const nameLenPlus = name.length + 1;
@@ -13,8 +13,13 @@ export const getCookie = (name: string) => {
   );
 };
 
+export const deleteCookie = (name: string) => {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 export const getAuthTokenFromCookie = () => {
   const authToken = getCookie(COOKIES.authCookie);
+  console.log(authToken);
   if (!authToken) {
     // TODO: redirect to login URL
   }
