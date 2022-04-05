@@ -144,7 +144,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FullName = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
-                    GroupId = table.Column<Guid>(type: "uuid", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uuid", nullable: true),
                     SubGroup = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -164,6 +164,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Answer = table.Column<string>(type: "text", nullable: false),
+                    Mark = table.Column<int>(type: "integer", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     TaskId = table.Column<Guid>(type: "uuid", nullable: false),
                     StudentId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -251,6 +252,11 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "FullName", "GroupId", "Role", "SubGroup" },
+                values: new object[] { new Guid("0294124d-5084-4953-ba67-332ee3632762"), "Шиман Дмитрий Владимирович", null, 0, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AnswerAttachments_AnswerId",

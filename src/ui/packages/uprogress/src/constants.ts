@@ -12,6 +12,9 @@ export const API_URLS = {
     reset: 'auth/reset',
     confirm: 'auth/confirm',
   },
+  user: {
+    getCurrentUser: 'user/getcurrentuser',
+  },
 };
 
 export const UI_URLS = {
@@ -20,5 +23,8 @@ export const UI_URLS = {
     login: '/auth/login',
     forgotPassword: '/auth/forgotpassword',
     resetPassword: '/auth/resetpassword',
+  },
+  user: {
+    list: '/user/list',
   },
 };

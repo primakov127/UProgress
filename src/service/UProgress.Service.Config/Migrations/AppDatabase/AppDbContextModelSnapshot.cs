@@ -235,6 +235,9 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                         .IsRequired()
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("Mark")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -322,7 +325,6 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                         .HasColumnType("character varying(512)");
 
                     b.Property<Guid?>("GroupId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<int>("Role")
@@ -338,6 +340,14 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.HasIndex("Role");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0294124d-5084-4953-ba67-332ee3632762"),
+                            FullName = "Шиман Дмитрий Владимирович",
+                            Role = 0
+                        });
                 });
 
             modelBuilder.Entity("UProgress.Contracts.Models.AnswerAttachment", b =>
@@ -500,8 +510,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.HasOne("UProgress.Contracts.Models.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Group");
                 });

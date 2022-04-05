@@ -1,14 +1,13 @@
-import { AppShell, testState } from '@ui/app-shell';
-import { RecoilRoot, useRecoilValue } from 'recoil';
+import { AppShell } from '@ui/app-shell';
+import { Route, Switch } from 'react-router';
+import { RecoilRoot } from 'recoil';
 import { uprogressAppGateway } from '../implementations/uprogressAppGateway';
-import 'antd/dist/antd.css';
 import { LoginScene } from '../components/LoginScene/LoginScene';
 import { ForgotScene } from '../components/ForgotScene/ForgotScene';
 import { ResetScene } from '../components/ResetScene/ResetScene';
-import { Route, Switch } from 'react-router';
+import { UserListScene } from '../components/UserListScene/UserListScene';
 import { UI_URLS } from '../constants';
-import { Button } from 'antd';
-import { redirectToLogin } from '../utils/urlUtils';
+import 'antd/dist/antd.css';
 
 export const App = () => (
   <RecoilRoot>
@@ -17,23 +16,11 @@ export const App = () => (
         <Route path={UI_URLS.auth.login} component={LoginScene} />
         <Route path={UI_URLS.auth.forgotPassword} component={ForgotScene} />
         <Route path={UI_URLS.auth.resetPassword} component={ResetScene} />
-        <Route path="/">
-          <Test />
-        </Route>
+
+        <Route path={UI_URLS.home} component={UserListScene} />
       </Switch>
     </AppShell>
   </RecoilRoot>
 );
-
-const Test = () => {
-  const t = useRecoilValue(testState);
-  console.log(t);
-  return (
-    <div>
-      <span>{t?.date}</span>
-      <Button onClick={redirectToLogin}>Logout</Button>
-    </div>
-  );
-};
 
 export default App;

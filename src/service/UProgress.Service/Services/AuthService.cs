@@ -33,6 +33,9 @@ public class AuthService
         }
 
         var userClaims = await GetUserRolesClaims(user);
+        
+        var idClaim = new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
+        userClaims.Add(idClaim);
 
         var signatureKey =
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes("This is the key that we will use in the encryption"));
@@ -57,7 +60,7 @@ public class AuthService
         }
 
         var resetPasswordResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
-        
+
         return resetPasswordResult.Succeeded;
     }
 
@@ -114,12 +117,14 @@ public class AuthService
         return emailConfirmationToken;
     }
 
-    private async Task<IList<Claim>?> GetUserRolesClaims(IdentityUser<Guid> user)
+    private async Task<IList<Claim>> GetUserRolesClaims(IdentityUser<Guid> user)
     {
+        var userClaims = new List<Claim>();
+
         var userRoles = await _userManager.GetRolesAsync(user);
         if (userRoles == null)
         {
-            return null;
+            return userClaims;
         }
 
         var roles = _roleManager.Roles.Where(role => userRoles.Contains(role.Name)).ToList();
@@ -127,7 +132,6 @@ public class AuthService
         var getClaimsAsyncTasks = roles.Select(role => _roleManager.GetClaimsAsync(role)).ToList();
         await Task.WhenAny(getClaimsAsyncTasks);
 
-        var userClaims = new List<Claim>();
         getClaimsAsyncTasks.ForEach(task => userClaims.AddRange(task.Result));
 
         return userClaims;

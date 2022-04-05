@@ -32,7 +32,7 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<User>().Property(u => u.FullName).HasMaxLength(512).IsRequired();
         modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<int>().IsRequired();
         modelBuilder.Entity<User>().HasOne(u => u.Group)
-            .WithMany(g => g.Students)
+            .WithMany(g => g.Students).IsRequired(false)
             .HasForeignKey(u => u.GroupId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<User>().HasOne(u => u.HeadGroup)
@@ -139,6 +139,7 @@ public sealed class AppDbContext : DbContext
 
         modelBuilder.Entity<TaskAnswer>().HasKey(ta => ta.Id);
         modelBuilder.Entity<TaskAnswer>().Property(ta => ta.Answer).IsRequired();
+        modelBuilder.Entity<TaskAnswer>().Property(ta => ta.Mark);
         modelBuilder.Entity<TaskAnswer>().Property(ta => ta.Status).HasConversion<int>().IsRequired();
         modelBuilder.Entity<TaskAnswer>().HasOne(ta => ta.Task)
             .WithMany(t => t.Answers)
@@ -177,7 +178,7 @@ public sealed class AppDbContext : DbContext
             .HasForeignKey(ta => ta.AnswerId);
 
         #endregion
-        
-        // modelBuilder.SeedData();
+
+        modelBuilder.SeedAppData();
     }
 }
