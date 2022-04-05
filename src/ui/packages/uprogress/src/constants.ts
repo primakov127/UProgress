@@ -14,6 +14,8 @@ export const API_URLS = {
   },
   user: {
     getCurrentUser: 'user/getcurrentuser',
+    getUserList: 'user/getuserlist',
+    createUser: 'user/create',
   },
 };
 
@@ -26,5 +28,7 @@ export const UI_URLS = {
   },
   user: {
     list: '/user/list',
+    add: '/user/add',
+    view: '/user/view',
   },
 };

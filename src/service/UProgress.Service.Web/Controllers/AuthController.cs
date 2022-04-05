@@ -93,7 +93,7 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("confirm")]
+    [HttpGet("confirm")]
     public async Task<IActionResult> ConfirmEmailAsync(string email, string emailConfirmToken)
     {
         if (!ModelState.IsValid)

@@ -70,6 +70,7 @@ builder.Services.AddSingleton<IEmailService>(new EmailService(
 );
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<UserRepository>();
 
 var app = builder.Build();

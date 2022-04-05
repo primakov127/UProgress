@@ -18,7 +18,7 @@ export const AppShell = ({ appGateway, children }: Props) => {
   return (
     <Container>
       {isAuth ? null : <InitializeState appGateway={appGateway} />}
-      {(isLoading && !isAuth) ? null : children}
+      {isLoading && !isAuth ? null : children}
     </Container>
   );
 };

@@ -8,6 +8,7 @@ import { ResetScene } from '../components/ResetScene/ResetScene';
 import { UserListScene } from '../components/UserListScene/UserListScene';
 import { UI_URLS } from '../constants';
 import 'antd/dist/antd.css';
+import { AddUserScene } from '../components/AddUserScene/AddUserScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -17,6 +18,7 @@ export const App = () => (
         <Route path={UI_URLS.auth.forgotPassword} component={ForgotScene} />
         <Route path={UI_URLS.auth.resetPassword} component={ResetScene} />
 
+        <Route path={UI_URLS.user.add} component={AddUserScene} />
         <Route path={UI_URLS.home} component={UserListScene} />
       </Switch>
     </AppShell>
