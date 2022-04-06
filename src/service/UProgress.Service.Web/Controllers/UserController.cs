@@ -68,7 +68,8 @@ public class UserController : ControllerBase
         {
             Id = u.Id,
             FullName = u.FullName,
-            UserType = u.Role
+            UserType = u.Role,
+            IsActive = u.IsActive
         });
 
         return Ok(result);
@@ -131,5 +132,41 @@ public class UserController : ControllerBase
         {
             UserId = appUserId
         });
+    }
+
+    [HttpPost("deactivate")]
+    public async Task<IActionResult> DeactivateUser(DeactivateUser message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var userId = Guid.Parse(message.UserId);
+        var isUserDeactivated = await _userService.DeactivateUser(userId);
+        if (!isUserDeactivated)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
+
+    [HttpPost("activate")]
+    public async Task<IActionResult> DeactivateUser(ActivateUser message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var userId = Guid.Parse(message.UserId);
+        var isUserDeactivated = await _userService.ActivateUser(userId);
+        if (!isUserDeactivated)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
     }
 }

@@ -31,6 +31,7 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<User>().HasKey(u => u.Id);
         modelBuilder.Entity<User>().Property(u => u.FullName).HasMaxLength(512).IsRequired();
         modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<int>().IsRequired();
+        modelBuilder.Entity<User>().Property(u => u.IsActive).HasDefaultValue(false);
         modelBuilder.Entity<User>().HasOne(u => u.Group)
             .WithMany(g => g.Students).IsRequired(false)
             .HasForeignKey(u => u.GroupId)

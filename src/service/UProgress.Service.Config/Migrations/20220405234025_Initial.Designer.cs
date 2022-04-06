@@ -9,11 +9,11 @@ using UProgress.Service.Config.Contexts;
 
 #nullable disable
 
-namespace UProgress.Service.Config.Migrations.AppDatabase
+namespace UProgress.Service.Config.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220405163039_InitAppDataBase")]
-    partial class InitAppDataBase
+    [Migration("20220405234025_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -329,6 +329,11 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.Property<Guid?>("GroupId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -348,6 +353,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                         {
                             Id = new Guid("0294124d-5084-4953-ba67-332ee3632762"),
                             FullName = "Шиман Дмитрий Владимирович",
+                            IsActive = false,
                             Role = 0
                         });
                 });

@@ -17,6 +17,7 @@ public class User : BaseEntity
 {
     public string FullName { get; set; }
     public UserType Role { get; set; }
+    public bool IsActive { get; set; }
     public Guid? GroupId { get; set; } = null;
     public SubGroupType? SubGroup { get; set; }
 

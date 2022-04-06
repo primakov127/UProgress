@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace UProgress.Service.Config.Migrations.AppDatabase
+namespace UProgress.Service.Config.Migrations
 {
-    public partial class InitAppDataBase : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -144,6 +144,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FullName = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     GroupId = table.Column<Guid>(type: "uuid", nullable: true),
                     SubGroup = table.Column<int>(type: "integer", nullable: true)
                 },

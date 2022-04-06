@@ -1,10 +1,10 @@
 import { useEffectAsync } from '@ui/app-shell';
 import {
   EditOutlined,
-  DeleteOutlined,
+  UserDeleteOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
-import { Button, Empty, List } from 'antd';
+import { Button, Empty, List, notification, Tooltip } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserListItem } from '../../models/UserListItem';
@@ -23,6 +23,32 @@ export const UserListScene = () => {
     }
   }, []);
 
+  const handleDeactivate = async (id: string) => {
+    const result = await userService.deactivateUser({ userId: id });
+    if (result.isSuccessful) {
+      notification.success({ message: 'Пользователь деактивирован' });
+
+      const getUsersResult = await userService.getUserList();
+      setUsers(getUsersResult.list);
+      return;
+    }
+
+    notification.error({ message: 'Неудалось деактивировать пользователя' });
+  };
+
+  const handleActivate = async (id: string) => {
+    const result = await userService.activateUser({ userId: id });
+    if (result.isSuccessful) {
+      notification.success({ message: 'Пользователь активирован' });
+
+      const getUsersResult = await userService.getUserList();
+      setUsers(getUsersResult.list);
+      return;
+    }
+
+    notification.error({ message: 'Неудалось активировать пользователя' });
+  };
+
   return (
     <div>
       {users ? (
@@ -39,17 +65,37 @@ export const UserListScene = () => {
             renderItem={(u) => (
               <List.Item
                 actions={[
-                  <Link to={'/user/delete'}>
+                  <Link to={`${UI_URLS.user.view}/${u.id}`}>
                     <EditOutlined />
                   </Link>,
-                  <Link to={'/user/edit'}>
-                    <DeleteOutlined />
-                  </Link>,
+                  <Tooltip
+                    title={u.isActive ? 'Деактивировать' : 'Активировать'}
+                  >
+                    <Button
+                      type="text"
+                      icon={
+                        u.isActive ? (
+                          <UserDeleteOutlined />
+                        ) : (
+                          <UserAddOutlined />
+                        )
+                      }
+                      onClick={() =>
+                        u.isActive
+                          ? handleDeactivate(u.id)
+                          : handleActivate(u.id)
+                      }
+                    />
+                  </Tooltip>,
                 ]}
               >
                 <List.Item.Meta
                   avatar={<UserTypeIcon userType={u.userType} />}
-                  title={<Link to={`/user/${u.id}`}>{u.fullName}</Link>}
+                  title={
+                    <Link to={`${UI_URLS.user.view}/${u.id}`}>
+                      {u.fullName}
+                    </Link>
+                  }
                 />
               </List.Item>
             )}

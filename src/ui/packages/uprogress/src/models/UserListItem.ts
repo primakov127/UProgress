@@ -4,4 +4,5 @@ export type UserListItem = {
   id: string;
   fullName: string;
   userType: UserType;
+  isActive: boolean;
 };

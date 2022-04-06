@@ -16,6 +16,8 @@ export const API_URLS = {
     getCurrentUser: 'user/getcurrentuser',
     getUserList: 'user/getuserlist',
     createUser: 'user/create',
+    deactivateUser: 'user/deactivate',
+    activateUser: 'user/activate',
   },
 };
 

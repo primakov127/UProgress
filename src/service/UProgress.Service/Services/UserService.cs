@@ -33,7 +33,8 @@ public class UserService
         var user = new User
         {
             FullName = fullName,
-            Role = userType
+            Role = userType,
+            IsActive = true
         };
 
         _userRepository.Insert(user);
@@ -46,5 +47,42 @@ public class UserService
     {
         _userRepository.Delete(id);
         await _unitOfWork.SaveAsync();
+    }
+
+    public async Task<bool> DeactivateUser(Guid id)
+    {
+        var user = _userRepository.GetById(id);
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.IsActive = false;
+        _userRepository.Update(user);
+        await _unitOfWork.SaveAsync();
+
+        return true;
+    }
+
+    public async Task<bool> ActivateUser(Guid id)
+    {
+        var user = _userRepository.GetById(id);
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.IsActive = true;
+        _userRepository.Update(user);
+        await _unitOfWork.SaveAsync();
+
+        return true;
+    }
+
+    public async Task<bool> IsActiveUser(Guid id)
+    {
+        var user = _userRepository.GetById(id);
+
+        return user is {IsActive: true};
     }
 }

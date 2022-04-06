@@ -10,11 +10,13 @@ public class AuthService
 {
     private readonly UserManager<IdentityUser<Guid>> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly UserService _userService;
 
-    public AuthService(UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+    public AuthService(UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager, UserService userService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _userService = userService;
     }
 
     public async Task<string?> GetAuthToken(string usernameOrEmail, string password)
@@ -28,6 +30,12 @@ public class AuthService
 
         var isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
         if (!isCorrectPassword)
+        {
+            return null;
+        }
+
+        var isActive = await _userService.IsActiveUser(user.Id);
+        if (!isActive)
         {
             return null;
         }

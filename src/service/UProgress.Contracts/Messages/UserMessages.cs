@@ -20,6 +20,7 @@ public class GetUserListResult
     public Guid Id { get; set; }
     public string FullName { get; set; }
     public UserType UserType { get; set; }
+    public bool IsActive { get; set; }
 }
 
 public class CreateUser
@@ -36,4 +37,14 @@ public class CreateUser
 public class CreateUserResult
 {
     public Guid UserId { get; set; }
+}
+
+public class DeactivateUser
+{
+    public string UserId { get; set; }
+}
+
+public class ActivateUser
+{
+    public string UserId { get; set; }
 }

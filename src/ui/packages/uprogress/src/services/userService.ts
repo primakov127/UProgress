@@ -1,6 +1,15 @@
 import { User } from '@ui/app-shell';
+import { message } from 'antd';
 import { API_URLS } from '../constants';
+import {
+  ActivateUser,
+  ActivateUserResult,
+} from '../models/messages/ActivateUser';
 import { CreateUser, CreateUserResult } from '../models/messages/CreateUser';
+import {
+  DeactivateUser,
+  DeactivateUserResult,
+} from '../models/messages/DeactivateUser';
 import { GetCurrentUserResult } from '../models/messages/GetCurrentUser';
 import { GetUserListResult } from '../models/messages/GetUserList';
 import { getHttpClient } from '../utils/httpUtils';
@@ -61,8 +70,42 @@ const createUser = async (message: CreateUser): Promise<CreateUserResult> => {
   }
 };
 
+const deactivateUser = async (
+  message: DeactivateUser
+): Promise<DeactivateUserResult> => {
+  try {
+    await getHttpClient().post(API_URLS.user.deactivateUser, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as DeactivateUserResult;
+  }
+};
+
+const activateUser = async (
+  message: ActivateUser
+): Promise<ActivateUserResult> => {
+  try {
+    await getHttpClient().post(API_URLS.user.activateUser, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as DeactivateUserResult;
+  }
+};
+
 export const userService = {
   getCurrentUser,
   getUserList,
   createUser,
+  deactivateUser,
+  activateUser,
 };
