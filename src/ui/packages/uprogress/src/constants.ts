@@ -18,6 +18,7 @@ export const API_URLS = {
     createUser: 'user/create',
     deactivateUser: 'user/deactivate',
     activateUser: 'user/activate',
+    getUser: 'user/getuser',
   },
 };
 

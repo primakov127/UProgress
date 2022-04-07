@@ -80,10 +80,6 @@ export const AddUserScene = () => {
           <Input disabled={loading} placeholder="pa$$w0rD" />
         </Form.Item>
 
-        <Form.Item name="phone" label="Номер телефона">
-          <Input disabled={loading} placeholder="+375447843293" />
-        </Form.Item>
-
         <Form.Item
           name="userType"
           label="Тип аккаунта"
@@ -130,7 +126,7 @@ export const AddUserScene = () => {
         </Button>
         <Link to={UI_URLS.user.list}>
           <Button type="primary" danger>
-            Закончить
+            Отменить
           </Button>
         </Link>
       </Form>

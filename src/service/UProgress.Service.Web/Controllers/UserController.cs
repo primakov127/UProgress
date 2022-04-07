@@ -169,4 +169,41 @@ public class UserController : ControllerBase
 
         return Ok();
     }
+
+    [HttpPost("getuser")]
+    public async Task<IActionResult> GetUserAsync(GetUser message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+        
+        var user = await _userManager.FindByIdAsync(message.UserId);
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        var appUser = _userRepository.GetById(user.Id);
+        if (appUser == null)
+        {
+            return BadRequest();
+        }
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var result = new GetCurrentUserResult
+        {
+            Id = user.Id,
+            Username = user.UserName,
+            FullName = appUser.FullName,
+            Email = user.Email,
+            Phone = user.PhoneNumber,
+            UserType = appUser.Role,
+            UserRoles = userRoles,
+            GroupId = appUser.GroupId,
+            SubGroupType = appUser.SubGroup
+        };
+
+        return Ok(result);
+    }
 }

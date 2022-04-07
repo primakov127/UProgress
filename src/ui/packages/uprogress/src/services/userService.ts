@@ -11,6 +11,7 @@ import {
   DeactivateUserResult,
 } from '../models/messages/DeactivateUser';
 import { GetCurrentUserResult } from '../models/messages/GetCurrentUser';
+import { GetUser, GetUserResult } from '../models/messages/GetUser';
 import { GetUserListResult } from '../models/messages/GetUserList';
 import { getHttpClient } from '../utils/httpUtils';
 
@@ -102,10 +103,35 @@ const activateUser = async (
   }
 };
 
+const getUser = async (message: GetUser): Promise<GetUserResult> => {
+  try {
+    const result = (await getHttpClient().post(API_URLS.user.getUser, message))
+      .data as User;
+
+    return {
+      isSuccessful: true,
+      id: result.id,
+      username: result.username,
+      email: result.email,
+      phone: result.phone,
+      fullName: result.fullName,
+      userType: result.userType,
+      userRoles: result.userRoles,
+      groupId: result.groupId,
+      subGroupType: result.subGroupType,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetCurrentUserResult;
+  }
+};
+
 export const userService = {
   getCurrentUser,
   getUserList,
   createUser,
   deactivateUser,
   activateUser,
+  getUser,
 };
