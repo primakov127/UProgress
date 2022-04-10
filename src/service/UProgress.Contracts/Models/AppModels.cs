@@ -44,6 +44,9 @@ public class Group : BaseEntity
 {
     public int StartYear { get; set; }
     public int GraduatedYear { get; set; }
+
+    public string Name { get; set; }
+    public int Number { get; set; }
     public Guid HeadId { get; set; }
     public Guid SpecialityId { get; set; }
 

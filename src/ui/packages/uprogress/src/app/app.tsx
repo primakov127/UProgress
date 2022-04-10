@@ -10,6 +10,8 @@ import { UI_URLS } from '../constants';
 import 'antd/dist/antd.css';
 import { AddUserScene } from '../components/AddUserScene/AddUserScene';
 import { ViewUserScene } from '../components/ViewUserScene/ViewUserScene';
+import { GroupListScene } from '../components/GroupListScene/GroupListScene';
+import { AddGroupScene } from '../components/AddGroupScene/AddGroupScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -25,6 +27,9 @@ export const App = () => (
           path={`${UI_URLS.user.view}/:userId`}
           component={ViewUserScene}
         />
+
+        <Route path={UI_URLS.group.list} component={GroupListScene} />
+        <Route path={UI_URLS.group.add} component={AddGroupScene} />
       </Switch>
     </AppShell>
   </RecoilRoot>

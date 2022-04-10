@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace UProgress.Service.Config.Migrations
+namespace UProgress.Service.Config.Migrations.AppDatabase
 {
     public partial class Initial : Migration
     {
@@ -123,6 +123,8 @@ namespace UProgress.Service.Config.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     StartYear = table.Column<int>(type: "integer", nullable: false),
                     GraduatedYear = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Number = table.Column<int>(type: "integer", nullable: false),
                     HeadId = table.Column<Guid>(type: "uuid", nullable: false),
                     SpecialityId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -255,9 +257,26 @@ namespace UProgress.Service.Config.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Specialities",
+                columns: new[] { "Id", "Name", "SemesterCount", "ShortName" },
+                values: new object[,]
+                {
+                    { new Guid("670e2fc2-c0fb-4f9f-a5cd-69888ad5e7f0"), "Дизайн Электронных и Веб-изданий", 8, "ДЭиВИ" },
+                    { new Guid("7affbec3-9f41-4583-8268-0fe869be2709"), "Программное Обеспечение Информационной Безопасности Мобильных Систем", 8, "ПОИБМС" },
+                    { new Guid("7e39d9e9-3d2b-45f7-ab52-03e68ce29715"), "Программное Обеспечение Информационных Технологий", 8, "ПОИТ" },
+                    { new Guid("e2a85d58-fe08-4b02-a3f5-c042b838bd37"), "Информационные Системы и Технологии", 8, "ИСиТ" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "FullName", "GroupId", "Role", "SubGroup" },
-                values: new object[] { new Guid("0294124d-5084-4953-ba67-332ee3632762"), "Шиман Дмитрий Владимирович", null, 0, null });
+                columns: new[] { "Id", "FullName", "GroupId", "IsActive", "Role", "SubGroup" },
+                values: new object[,]
+                {
+                    { new Guid("0294124d-5084-4953-ba67-332ee3632762"), "Шиман Дмитрий Васильевич", null, true, 0, null },
+                    { new Guid("4abc4d94-7e61-44e6-ad97-ecb795d3b995"), "Гинько Вадим Рудольфович", null, true, 2, null },
+                    { new Guid("625a7ff4-39a4-445b-af85-12b5e8392278"), "Примаков Максим Николаевич", null, true, 2, null },
+                    { new Guid("afbb9749-f7c1-4886-8284-1f9294477c76"), "Пацей Наталья Владимировна", null, true, 1, null }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AnswerAttachments_AnswerId",

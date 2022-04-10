@@ -9,7 +9,6 @@ public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
 
     public DbSet<User> Users { get; set; }
@@ -35,7 +34,7 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<User>().HasOne(u => u.Group)
             .WithMany(g => g.Students).IsRequired(false)
             .HasForeignKey(u => u.GroupId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<User>().HasOne(u => u.HeadGroup)
             .WithOne(g => g.Head)
             .HasForeignKey<Group>(g => g.HeadId);
@@ -60,6 +59,8 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<Group>().HasKey(g => g.Id);
         modelBuilder.Entity<Group>().Property(g => g.StartYear).IsRequired();
         modelBuilder.Entity<Group>().Property(g => g.GraduatedYear).IsRequired();
+        modelBuilder.Entity<Group>().Property(g => g.Name).HasMaxLength(128).IsRequired();
+        modelBuilder.Entity<Group>().Property(g => g.Number).IsRequired();
         modelBuilder.Entity<Group>().HasOne(g => g.Speciality)
             .WithMany(s => s.Groups)
             .HasForeignKey(g => g.SpecialityId);

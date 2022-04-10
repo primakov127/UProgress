@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UProgress.Contracts.Models;
 using UProgress.Service.Repositories;
 using Task = System.Threading.Tasks.Task;
@@ -84,5 +85,23 @@ public class UserService
         var user = _userRepository.GetById(id);
 
         return user is {IsActive: true};
+    }
+
+    public async Task SetStudentsGroup(Guid groupId, Dictionary<Guid, SubGroupType> studentsMeta)
+    {
+        var students = _userRepository.Get().Where(u => studentsMeta.Keys.Contains(u.Id));
+        foreach (var student in students)
+        {
+            student.GroupId = groupId;
+            student.SubGroup = studentsMeta[student.Id];
+            _userRepository.Update(student);
+        }
+
+        await _unitOfWork.SaveAsync();
+    }
+
+    public List<User> GetAllWithoutGroupStudents()
+    {
+        return _userRepository.Get().Where(u => u.Role == UserType.Student && u.GroupId == null).ToList();
     }
 }

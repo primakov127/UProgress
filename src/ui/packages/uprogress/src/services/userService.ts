@@ -11,6 +11,7 @@ import {
   DeactivateUserResult,
 } from '../models/messages/DeactivateUser';
 import { GetCurrentUserResult } from '../models/messages/GetCurrentUser';
+import { GetStudentListResult } from '../models/messages/GetStudentList';
 import { GetUser, GetUserResult } from '../models/messages/GetUser';
 import { GetUserListResult } from '../models/messages/GetUserList';
 import { getHttpClient } from '../utils/httpUtils';
@@ -75,7 +76,7 @@ const deactivateUser = async (
   message: DeactivateUser
 ): Promise<DeactivateUserResult> => {
   try {
-    await getHttpClient().post(API_URLS.user.deactivateUser, message);
+    await getHttpClient().post(API_URLS.group.deleteGroup, message);
 
     return {
       isSuccessful: true,
@@ -127,6 +128,22 @@ const getUser = async (message: GetUser): Promise<GetUserResult> => {
   }
 };
 
+const getStudentList = async (): Promise<GetStudentListResult> => {
+  try {
+    const result = (await getHttpClient().get(API_URLS.user.getStudentList))
+      .data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetStudentListResult;
+  }
+};
+
 export const userService = {
   getCurrentUser,
   getUserList,
@@ -134,4 +151,5 @@ export const userService = {
   deactivateUser,
   activateUser,
   getUser,
+  getStudentList,
 };

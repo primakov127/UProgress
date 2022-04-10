@@ -46,7 +46,7 @@ export const UserListScene = () => {
       return;
     }
 
-    notification.error({ message: 'Неудалось активировать пользователя' });
+    notification.error({ message: 'Не удалось активировать пользователя' });
   };
 
   return (

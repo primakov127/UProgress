@@ -7,6 +7,7 @@ using UProgress.Contracts.Models;
 using UProgress.Service.Interfaces;
 using UProgress.Service.Repositories;
 using UProgress.Service.Services;
+using Task = System.Threading.Tasks.Task;
 
 namespace UProgress.Service.Web.Controllers;
 
@@ -29,7 +30,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("getcurrentuser")]
-    // [Authorize(Policy = AuthClaims.GetCurrentUser)]
+    [Authorize(Policy = AuthClaims.GetCurrentUser)]
     public async Task<IActionResult> GetCurrentUserAsync()
     {
         var user = await _userService.GetUserByHttpContext(HttpContext);
@@ -177,7 +178,7 @@ public class UserController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         var user = await _userManager.FindByIdAsync(message.UserId);
         if (user == null)
         {
@@ -191,7 +192,7 @@ public class UserController : ControllerBase
         }
 
         var userRoles = await _userManager.GetRolesAsync(user);
-        var result = new GetCurrentUserResult
+        var result = new GetUserResult
         {
             Id = user.Id,
             Username = user.UserName,
@@ -203,6 +204,18 @@ public class UserController : ControllerBase
             GroupId = appUser.GroupId,
             SubGroupType = appUser.SubGroup
         };
+
+        return Ok(result);
+    }
+
+    [HttpGet("getstudentlist")]
+    public async Task<IActionResult> GetStudentList()
+    {
+        var result = _userService.GetAllWithoutGroupStudents().Select(s => new GetStudentListResult
+        {
+            Id = s.Id,
+            FullName = s.FullName
+        });
 
         return Ok(result);
     }

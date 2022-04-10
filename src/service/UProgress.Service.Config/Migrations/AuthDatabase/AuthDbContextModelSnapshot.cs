@@ -52,16 +52,30 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                         new
                         {
                             Id = new Guid("193d2a83-4371-4e70-8cc1-420d401a02df"),
-                            ConcurrencyStamp = "9f07b752-7d07-47fa-a515-bbb289d265aa",
+                            ConcurrencyStamp = "3d99b382-2403-4423-a853-be7315f67ee6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649"),
-                            ConcurrencyStamp = "ff635e86-6b17-41c9-93dd-f60252da1fe2",
+                            ConcurrencyStamp = "11c21e98-530f-4739-93f8-47d153aafe20",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
+                        },
+                        new
+                        {
+                            Id = new Guid("e27f0634-9582-41fc-991e-eec2150a4179"),
+                            ConcurrencyStamp = "75321958-7c52-4a58-942a-1543e582c666",
+                            Name = "GroupHead",
+                            NormalizedName = "GROUPHEAD"
+                        },
+                        new
+                        {
+                            Id = new Guid("51822b2a-fc6b-4f79-a5d7-86687d20128d"),
+                            ConcurrencyStamp = "fcc1271c-8879-491b-a0b2-b3d3c7483d31",
+                            Name = "Student",
+                            NormalizedName = "STUDENT"
                         });
                 });
 
@@ -92,14 +106,14 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                         new
                         {
                             Id = 1,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/authorizationdecision",
+                            ClaimType = "Policy",
                             ClaimValue = "EditUsers",
                             RoleId = new Guid("193d2a83-4371-4e70-8cc1-420d401a02df")
                         },
                         new
                         {
                             Id = 2,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/authorizationdecision",
+                            ClaimType = "Policy",
                             ClaimValue = "User:GetCurrentUser",
                             RoleId = new Guid("193d2a83-4371-4e70-8cc1-420d401a02df")
                         });
@@ -174,16 +188,60 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                         {
                             Id = new Guid("0294124d-5084-4953-ba67-332ee3632762"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2e4c0e01-536a-4267-966c-739d46dda043",
+                            ConcurrencyStamp = "aac8edfb-14e7-4f1a-ba28-17bbacef00a4",
+                            Email = "shiman@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "DECAN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDHT21XHDIzik5BFARaha/devFjrwZ61Ony9eCojygpWTGeSKSwVyagjrUEOAQluZA==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "decan"
+                        },
+                        new
+                        {
+                            Id = new Guid("afbb9749-f7c1-4886-8284-1f9294477c76"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1b0fd9ec-b428-45e9-9133-0548614546bc",
+                            Email = "patsei@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "TEACHER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMn99iwA+W0bUCYWNoegIqgtoaGHLPfXPs3EJub116Jv/jF0kq3zqSZMNJhrwVXX9A==",
+                            PhoneNumber = "+375295463843",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "teacher"
+                        },
+                        new
+                        {
+                            Id = new Guid("625a7ff4-39a4-445b-af85-12b5e8392278"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "539c8a93-bd28-40d0-937d-4e70df11ce71",
                             Email = "primakov127@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAED77ZAINYjD13hPqE2walZY92S6A3mQJ6/Hm9iyuGNC14j+L62sOUvP4MmkGxdkjVg==",
+                            NormalizedUserName = "HEAD",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGGLupq9pn5LiMYpOgAPss7n3R16VeERxWiH1IyW8kAUsewdnnY9wFoMiTYX/VeUKg==",
                             PhoneNumber = "+375447843293",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
-                            UserName = "admin"
+                            UserName = "head"
+                        },
+                        new
+                        {
+                            Id = new Guid("4abc4d94-7e61-44e6-ad97-ecb795d3b995"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "44178e5b-b21a-46d8-90b5-b33304b46208",
+                            Email = "ginko@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "STUDENT",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDge6FlB71xcy3jZErz+u5U2yrBayRshQWLNohCSGaIUI7qbDw60AwMcEr5lLlyx0A==",
+                            PhoneNumber = "+375447835693",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "student"
                         });
                 });
 
@@ -251,6 +309,31 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                         {
                             UserId = new Guid("0294124d-5084-4953-ba67-332ee3632762"),
                             RoleId = new Guid("193d2a83-4371-4e70-8cc1-420d401a02df")
+                        },
+                        new
+                        {
+                            UserId = new Guid("0294124d-5084-4953-ba67-332ee3632762"),
+                            RoleId = new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649")
+                        },
+                        new
+                        {
+                            UserId = new Guid("afbb9749-f7c1-4886-8284-1f9294477c76"),
+                            RoleId = new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649")
+                        },
+                        new
+                        {
+                            UserId = new Guid("625a7ff4-39a4-445b-af85-12b5e8392278"),
+                            RoleId = new Guid("e27f0634-9582-41fc-991e-eec2150a4179")
+                        },
+                        new
+                        {
+                            UserId = new Guid("625a7ff4-39a4-445b-af85-12b5e8392278"),
+                            RoleId = new Guid("51822b2a-fc6b-4f79-a5d7-86687d20128d")
+                        },
+                        new
+                        {
+                            UserId = new Guid("4abc4d94-7e61-44e6-ad97-ecb795d3b995"),
+                            RoleId = new Guid("51822b2a-fc6b-4f79-a5d7-86687d20128d")
                         });
                 });
 

@@ -66,3 +66,9 @@ public class GetUserResult
     public Guid? GroupId { get; set; }
     public SubGroupType? SubGroupType { get; set; }
 }
+
+public class GetStudentListResult
+{
+    public Guid Id { get; set; }
+    public string FullName { get; set; }
+}

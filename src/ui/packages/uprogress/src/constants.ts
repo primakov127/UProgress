@@ -19,6 +19,13 @@ export const API_URLS = {
     deactivateUser: 'user/deactivate',
     activateUser: 'user/activate',
     getUser: 'user/getuser',
+    getStudentList: 'user/getstudentlist',
+  },
+  group: {
+    createGroup: 'group/create',
+    getGroupList: 'group/getgrouplist',
+    deleteGroup: 'group/delete',
+    getSpecialityList: 'group/getspecialitylist',
   },
 };
 
@@ -33,5 +40,10 @@ export const UI_URLS = {
     list: '/user/list',
     add: '/user/add',
     view: '/user/view',
+  },
+  group: {
+    list: '/group/list',
+    add: '/group/add',
+    view: '/group/view',
   },
 };
