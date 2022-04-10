@@ -124,6 +124,14 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.Property<Guid>("HeadId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("SpecialityId")
                         .HasColumnType("uuid");
 
@@ -164,6 +172,36 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.HasKey("Id");
 
                     b.ToTable("Specialities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7e39d9e9-3d2b-45f7-ab52-03e68ce29715"),
+                            Name = "Программное Обеспечение Информационных Технологий",
+                            SemesterCount = 8,
+                            ShortName = "ПОИТ"
+                        },
+                        new
+                        {
+                            Id = new Guid("e2a85d58-fe08-4b02-a3f5-c042b838bd37"),
+                            Name = "Информационные Системы и Технологии",
+                            SemesterCount = 8,
+                            ShortName = "ИСиТ"
+                        },
+                        new
+                        {
+                            Id = new Guid("7affbec3-9f41-4583-8268-0fe869be2709"),
+                            Name = "Программное Обеспечение Информационной Безопасности Мобильных Систем",
+                            SemesterCount = 8,
+                            ShortName = "ПОИБМС"
+                        },
+                        new
+                        {
+                            Id = new Guid("670e2fc2-c0fb-4f9f-a5cd-69888ad5e7f0"),
+                            Name = "Дизайн Электронных и Веб-изданий",
+                            SemesterCount = 8,
+                            ShortName = "ДЭиВИ"
+                        });
                 });
 
             modelBuilder.Entity("UProgress.Contracts.Models.StudentDiscipline", b =>
@@ -234,6 +272,9 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.Property<Guid?>("ApprovedById")
                         .IsRequired()
                         .HasColumnType("uuid");
+
+                    b.Property<int?>("Mark")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
@@ -322,8 +363,12 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                         .HasColumnType("character varying(512)");
 
                     b.Property<Guid?>("GroupId")
-                        .IsRequired()
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("Role")
                         .HasColumnType("integer");
@@ -338,6 +383,36 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.HasIndex("Role");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0294124d-5084-4953-ba67-332ee3632762"),
+                            FullName = "Шиман Дмитрий Васильевич",
+                            IsActive = true,
+                            Role = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("afbb9749-f7c1-4886-8284-1f9294477c76"),
+                            FullName = "Пацей Наталья Владимировна",
+                            IsActive = true,
+                            Role = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("625a7ff4-39a4-445b-af85-12b5e8392278"),
+                            FullName = "Примаков Максим Николаевич",
+                            IsActive = true,
+                            Role = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("4abc4d94-7e61-44e6-ad97-ecb795d3b995"),
+                            FullName = "Гинько Вадим Рудольфович",
+                            IsActive = true,
+                            Role = 2
+                        });
                 });
 
             modelBuilder.Entity("UProgress.Contracts.Models.AnswerAttachment", b =>
@@ -500,8 +575,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                     b.HasOne("UProgress.Contracts.Models.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Group");
                 });

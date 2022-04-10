@@ -13,9 +13,8 @@ export * from './models/AppGatewayModel';
 export * from './models/SubGroupType';
 export * from './models/User';
 export * from './models/UserType';
-export * from './models/Test';
+export * from './models/UserRole';
 
 // State
 export * from './state/userState';
 export * from './state/loadingState';
-export * from './state/testState';

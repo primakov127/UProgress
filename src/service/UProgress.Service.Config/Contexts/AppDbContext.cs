@@ -9,7 +9,6 @@ public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
 
     public DbSet<User> Users { get; set; }
@@ -31,10 +30,11 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<User>().HasKey(u => u.Id);
         modelBuilder.Entity<User>().Property(u => u.FullName).HasMaxLength(512).IsRequired();
         modelBuilder.Entity<User>().Property(u => u.Role).HasConversion<int>().IsRequired();
+        modelBuilder.Entity<User>().Property(u => u.IsActive).HasDefaultValue(false);
         modelBuilder.Entity<User>().HasOne(u => u.Group)
-            .WithMany(g => g.Students)
+            .WithMany(g => g.Students).IsRequired(false)
             .HasForeignKey(u => u.GroupId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<User>().HasOne(u => u.HeadGroup)
             .WithOne(g => g.Head)
             .HasForeignKey<Group>(g => g.HeadId);
@@ -59,6 +59,8 @@ public sealed class AppDbContext : DbContext
         modelBuilder.Entity<Group>().HasKey(g => g.Id);
         modelBuilder.Entity<Group>().Property(g => g.StartYear).IsRequired();
         modelBuilder.Entity<Group>().Property(g => g.GraduatedYear).IsRequired();
+        modelBuilder.Entity<Group>().Property(g => g.Name).HasMaxLength(128).IsRequired();
+        modelBuilder.Entity<Group>().Property(g => g.Number).IsRequired();
         modelBuilder.Entity<Group>().HasOne(g => g.Speciality)
             .WithMany(s => s.Groups)
             .HasForeignKey(g => g.SpecialityId);
@@ -139,6 +141,7 @@ public sealed class AppDbContext : DbContext
 
         modelBuilder.Entity<TaskAnswer>().HasKey(ta => ta.Id);
         modelBuilder.Entity<TaskAnswer>().Property(ta => ta.Answer).IsRequired();
+        modelBuilder.Entity<TaskAnswer>().Property(ta => ta.Mark);
         modelBuilder.Entity<TaskAnswer>().Property(ta => ta.Status).HasConversion<int>().IsRequired();
         modelBuilder.Entity<TaskAnswer>().HasOne(ta => ta.Task)
             .WithMany(t => t.Answers)
@@ -177,7 +180,7 @@ public sealed class AppDbContext : DbContext
             .HasForeignKey(ta => ta.AnswerId);
 
         #endregion
-        
-        // modelBuilder.SeedData();
+
+        modelBuilder.SeedAppData();
     }
 }

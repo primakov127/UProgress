@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace UProgress.Service.Config.Migrations.AuthDatabase
 {
-    public partial class InitAppDataBase : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -160,8 +160,10 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("193d2a83-4371-4e70-8cc1-420d401a02df"), "66af47f6-f5b7-474a-b3c9-48a63c4e4adc", "Admin", "ADMIN" },
-                    { new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649"), "8eae8812-a951-45a6-b824-de95ecf0d614", "Teacher", "TEACHER" }
+                    { new Guid("193d2a83-4371-4e70-8cc1-420d401a02df"), "3d99b382-2403-4423-a853-be7315f67ee6", "Admin", "ADMIN" },
+                    { new Guid("51822b2a-fc6b-4f79-a5d7-86687d20128d"), "fcc1271c-8879-491b-a0b2-b3d3c7483d31", "Student", "STUDENT" },
+                    { new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649"), "11c21e98-530f-4739-93f8-47d153aafe20", "Teacher", "TEACHER" },
+                    { new Guid("e27f0634-9582-41fc-991e-eec2150a4179"), "75321958-7c52-4a58-942a-1543e582c666", "GroupHead", "GROUPHEAD" }
                 });
 
             migrationBuilder.InsertData(
@@ -169,14 +171,20 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("0294124d-5084-4953-ba67-332ee3632762"), 0, "08c409f2-4173-4e85-ba3e-47ece24d249d", null, false, false, null, null, "ADMIN", "AQAAAAEAACcQAAAAEGzxI7XzPyAv2ljQICBLuxdZ2zttCKj1FbQnfJAseZxyC5tlv8fVpLEbO7SM03DC4w==", null, false, null, false, "admin" },
-                    { new Guid("7ceb10a6-27ea-4350-abbc-2cfd8b6e5056"), 0, "afaf2039-0faa-4dfe-bee2-ace88659ba08", null, false, false, null, null, "TEACHER", "AQAAAAEAACcQAAAAED1RXudv4CYvP2F2qEHY49CwjbTlWmSTRGbDShlAPjibJWceWdc9nWdv6KaDUv1eYw==", null, false, null, false, "teacher" }
+                    { new Guid("0294124d-5084-4953-ba67-332ee3632762"), 0, "aac8edfb-14e7-4f1a-ba28-17bbacef00a4", "shiman@gmail.com", true, false, null, null, "DECAN", "AQAAAAEAACcQAAAAEDHT21XHDIzik5BFARaha/devFjrwZ61Ony9eCojygpWTGeSKSwVyagjrUEOAQluZA==", null, false, null, false, "decan" },
+                    { new Guid("4abc4d94-7e61-44e6-ad97-ecb795d3b995"), 0, "44178e5b-b21a-46d8-90b5-b33304b46208", "ginko@gmail.com", true, false, null, null, "STUDENT", "AQAAAAEAACcQAAAAEDge6FlB71xcy3jZErz+u5U2yrBayRshQWLNohCSGaIUI7qbDw60AwMcEr5lLlyx0A==", "+375447835693", false, null, false, "student" },
+                    { new Guid("625a7ff4-39a4-445b-af85-12b5e8392278"), 0, "539c8a93-bd28-40d0-937d-4e70df11ce71", "primakov127@gmail.com", true, false, null, null, "HEAD", "AQAAAAEAACcQAAAAEGGLupq9pn5LiMYpOgAPss7n3R16VeERxWiH1IyW8kAUsewdnnY9wFoMiTYX/VeUKg==", "+375447843293", false, null, false, "head" },
+                    { new Guid("afbb9749-f7c1-4886-8284-1f9294477c76"), 0, "1b0fd9ec-b428-45e9-9133-0548614546bc", "patsei@gmail.com", true, false, null, null, "TEACHER", "AQAAAAEAACcQAAAAEMn99iwA+W0bUCYWNoegIqgtoaGHLPfXPs3EJub116Jv/jF0kq3zqSZMNJhrwVXX9A==", "+375295463843", false, null, false, "teacher" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
-                values: new object[] { 1, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/authorizationdecision", "EditUsers", new Guid("193d2a83-4371-4e70-8cc1-420d401a02df") });
+                values: new object[,]
+                {
+                    { 1, "Policy", "EditUsers", new Guid("193d2a83-4371-4e70-8cc1-420d401a02df") },
+                    { 2, "Policy", "User:GetCurrentUser", new Guid("193d2a83-4371-4e70-8cc1-420d401a02df") }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -184,7 +192,11 @@ namespace UProgress.Service.Config.Migrations.AuthDatabase
                 values: new object[,]
                 {
                     { new Guid("193d2a83-4371-4e70-8cc1-420d401a02df"), new Guid("0294124d-5084-4953-ba67-332ee3632762") },
-                    { new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649"), new Guid("7ceb10a6-27ea-4350-abbc-2cfd8b6e5056") }
+                    { new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649"), new Guid("0294124d-5084-4953-ba67-332ee3632762") },
+                    { new Guid("51822b2a-fc6b-4f79-a5d7-86687d20128d"), new Guid("4abc4d94-7e61-44e6-ad97-ecb795d3b995") },
+                    { new Guid("51822b2a-fc6b-4f79-a5d7-86687d20128d"), new Guid("625a7ff4-39a4-445b-af85-12b5e8392278") },
+                    { new Guid("e27f0634-9582-41fc-991e-eec2150a4179"), new Guid("625a7ff4-39a4-445b-af85-12b5e8392278") },
+                    { new Guid("5c6a2bb9-2662-4420-bae4-73e2d260c649"), new Guid("afbb9749-f7c1-4886-8284-1f9294477c76") }
                 });
 
             migrationBuilder.CreateIndex(

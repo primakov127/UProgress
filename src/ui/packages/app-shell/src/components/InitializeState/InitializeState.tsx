@@ -3,16 +3,14 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useEffectAsync } from '../../hooks/useEffectAsync';
 import { IAppGateway } from '../../interfaces/IAppGatewat';
 import { appGatewayLoadingState } from '../../state/loadingState';
-import { testState } from '../../state/testState';
-// import { userState } from '../../state/userState';
+import { userState } from '../../state/userState';
 
 type Props = {
   appGateway: IAppGateway;
 };
 
 export const InitializeState = ({ appGateway }: Props) => {
-  //   const setUserState = useSetRecoilState(userState);
-  const setTestState = useSetRecoilState(testState);
+    const setUserState = useSetRecoilState(userState);
   const [isPageLoading, setIsPageLoading] = useRecoilState(
     appGatewayLoadingState
   );
@@ -20,10 +18,8 @@ export const InitializeState = ({ appGateway }: Props) => {
   useEffectAsync(async () => {
     setIsPageLoading(true);
 
-    // const user = await appGateway.getUserAsync();
-    // setUserState(user);
-    const test = await appGateway.getTestAsync();
-    setTestState(test);
+    const user = await appGateway.getUserAsync();
+    setUserState(user);
 
     setIsPageLoading(false);
   }, []);

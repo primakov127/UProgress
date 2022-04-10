@@ -10,11 +10,13 @@ public class AuthService
 {
     private readonly UserManager<IdentityUser<Guid>> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly UserService _userService;
 
-    public AuthService(UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+    public AuthService(UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager, UserService userService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _userService = userService;
     }
 
     public async Task<string?> GetAuthToken(string usernameOrEmail, string password)
@@ -32,7 +34,16 @@ public class AuthService
             return null;
         }
 
+        var isActive = await _userService.IsActiveUser(user.Id);
+        if (!isActive)
+        {
+            return null;
+        }
+
         var userClaims = await GetUserRolesClaims(user);
+        
+        var idClaim = new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
+        userClaims.Add(idClaim);
 
         var signatureKey =
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes("This is the key that we will use in the encryption"));
@@ -57,7 +68,7 @@ public class AuthService
         }
 
         var resetPasswordResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
-        
+
         return resetPasswordResult.Succeeded;
     }
 
@@ -114,12 +125,14 @@ public class AuthService
         return emailConfirmationToken;
     }
 
-    private async Task<IList<Claim>?> GetUserRolesClaims(IdentityUser<Guid> user)
+    private async Task<IList<Claim>> GetUserRolesClaims(IdentityUser<Guid> user)
     {
+        var userClaims = new List<Claim>();
+
         var userRoles = await _userManager.GetRolesAsync(user);
         if (userRoles == null)
         {
-            return null;
+            return userClaims;
         }
 
         var roles = _roleManager.Roles.Where(role => userRoles.Contains(role.Name)).ToList();
@@ -127,7 +140,6 @@ public class AuthService
         var getClaimsAsyncTasks = roles.Select(role => _roleManager.GetClaimsAsync(role)).ToList();
         await Task.WhenAny(getClaimsAsyncTasks);
 
-        var userClaims = new List<Claim>();
         getClaimsAsyncTasks.ForEach(task => userClaims.AddRange(task.Result));
 
         return userClaims;

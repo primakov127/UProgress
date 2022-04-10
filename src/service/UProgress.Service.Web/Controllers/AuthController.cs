@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new ApiBadRequest("Пожалуйста, подтвердите почту перед тем как войти"));
         }
-
+        
         Response.Cookies.Append("uprogress-st", authToken, new CookieOptions()
         {
             SameSite = SameSiteMode.None,
@@ -93,7 +93,7 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("confirm")]
+    [HttpGet("confirm")]
     public async Task<IActionResult> ConfirmEmailAsync(string email, string emailConfirmToken)
     {
         if (!ModelState.IsValid)

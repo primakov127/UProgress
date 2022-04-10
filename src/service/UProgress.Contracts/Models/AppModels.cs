@@ -17,7 +17,8 @@ public class User : BaseEntity
 {
     public string FullName { get; set; }
     public UserType Role { get; set; }
-    public Guid? GroupId { get; set; }
+    public bool IsActive { get; set; }
+    public Guid? GroupId { get; set; } = null;
     public SubGroupType? SubGroup { get; set; }
 
     public virtual Group Group { get; set; }
@@ -43,6 +44,9 @@ public class Group : BaseEntity
 {
     public int StartYear { get; set; }
     public int GraduatedYear { get; set; }
+
+    public string Name { get; set; }
+    public int Number { get; set; }
     public Guid HeadId { get; set; }
     public Guid SpecialityId { get; set; }
 
@@ -113,6 +117,7 @@ public class TaskAttachment : BaseEntity
 public class TaskAnswer : BaseEntity
 {
     public string Answer { get; set; }
+    public int? Mark { get; set; }
     public AnswerStatus Status { get; set; }
     public Guid TaskId { get; set; }
     public Guid StudentId { get; set; }

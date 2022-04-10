@@ -1,13 +1,15 @@
-import { SubGroupType } from "./SubGroupType";
-import { UserType } from "./UserType";
+import { SubGroupType } from './SubGroupType';
+import { UserRole } from './UserRole';
+import { UserType } from './UserType';
 
 export type User = {
-    id: string;
-    username: string;
-    email: string;
-    phone: string;
-    fullName: string;
-    userType: UserType;
-    groupId?: string;
-    subGroupType?: SubGroupType;
-}
+  id: string;
+  username: string;
+  email: string;
+  phone: string;
+  fullName: string;
+  userType: UserType;
+  userRoles: UserRole[];
+  groupId?: string;
+  subGroupType?: SubGroupType;
+};

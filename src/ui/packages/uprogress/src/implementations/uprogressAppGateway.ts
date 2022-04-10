@@ -1,24 +1,23 @@
-import { AppGatewayModel, IAppGateway, Test } from '@ui/app-shell';
-import { API_URLS } from '../constants';
-import { getHttpClient } from '../utils/httpUtils';
+import { AppGatewayModel, IAppGateway, User } from '@ui/app-shell';
+import { userService } from '../services/userService';
 
 export const uprogressAppGateway = (): IAppGateway => {
-  const getTestAsync = async () => {
-    const result = await getHttpClient().get(API_URLS.test.getWeather);
+  const getUserAsync = async () => {
+    const result = await userService.getCurrentUser();
 
-    return result.data[0] as Test;
+    return result as User;
   };
 
   const getAppGatewayModelAsync = async () => {
-    const test = await getTestAsync();
+    const user = await getUserAsync();
 
     return {
-      test,
+      user,
     } as AppGatewayModel;
   };
 
   return {
     getAppGatewayModelAsync,
-    getTestAsync,
+    getUserAsync,
   };
 };

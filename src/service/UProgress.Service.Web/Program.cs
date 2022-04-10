@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UProgress.Service.Config.Contexts;
 using UProgress.Service.Interfaces;
+using UProgress.Service.Repositories;
 using UProgress.Service.Services;
 using UProgress.Service.Web.Authorization;
 
@@ -68,6 +69,12 @@ builder.Services.AddSingleton<IEmailService>(new EmailService(
     configuration.GetValue<string>("EmailServiceConfig:Password"))
 );
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<GroupService>();
+builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<GroupRepository>();
+builder.Services.AddScoped<SpecialityRepository>();
 
 var app = builder.Build();
 
