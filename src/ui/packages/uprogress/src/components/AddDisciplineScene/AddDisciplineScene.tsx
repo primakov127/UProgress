@@ -53,7 +53,7 @@ export const AddDisciplineScene = () => {
 
       if (result.isSuccessful) {
         notification.success({ message: 'Дисциплина успешно создана' });
-        history.push(UI_URLS.group.list);
+        history.push(UI_URLS.discipline.list);
       }
     } catch (e: unknown) {
       if (!axios.isAxiosError(e)) {
@@ -156,7 +156,7 @@ export const AddDisciplineScene = () => {
             disabled={loading}
             placeholder="Используйте разметку"
             onChange={(e) => setMarkdown(e.target.value)}
-            autoSize={{ minRows: 3, maxRows: 5 }}
+            autoSize={{ minRows: 15, maxRows: 15 }}
           />
         </Form.Item>
 
@@ -174,9 +174,9 @@ export const AddDisciplineScene = () => {
         <Button block type="primary" htmlType="submit" loading={loading}>
           Создать
         </Button>
-        <Link to={UI_URLS.user.list}>
+        <Link to={UI_URLS.discipline.list}>
           <Button type="primary" danger>
-            Отменить
+            Вернуться к списку
           </Button>
         </Link>
       </Form>

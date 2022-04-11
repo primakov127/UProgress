@@ -51,4 +51,21 @@ public class DisciplineController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("delete")]
+    public async Task<IActionResult> DeleteDiscipline(DeleteDiscipline message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var isGroupDeleted = await _disciplineService.DeleteDiscipline(message.DisciplineId);
+        if (!isGroupDeleted)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
 }

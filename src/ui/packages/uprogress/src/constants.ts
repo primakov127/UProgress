@@ -29,6 +29,8 @@ export const API_URLS = {
   },
   discipline: {
     createDiscipline: 'discipline/create',
+    getDisciplineList: 'discipline/getdisciplinelist',
+    deleteDiscipline: 'discipline/delete',
   },
 };
 

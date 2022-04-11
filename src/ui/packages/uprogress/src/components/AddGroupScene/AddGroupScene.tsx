@@ -253,7 +253,7 @@ export const AddGroupScene = () => {
         </Button>
         <Link to={UI_URLS.group.list}>
           <Button type="primary" danger>
-            Отменить
+            Вернуться к списку
           </Button>
         </Link>
       </Form>

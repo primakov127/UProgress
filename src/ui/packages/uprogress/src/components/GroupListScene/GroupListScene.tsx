@@ -1,6 +1,6 @@
 import { useEffectAsync } from '@ui/app-shell';
 import { Button, Empty, List, Modal, notification } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -41,7 +41,9 @@ export const GroupListScene = () => {
       {groups ? (
         <Container>
           <Link to={UI_URLS.group.add}>
-            <Button type="dashed">Добавить группу</Button>
+            <Button type="dashed" icon={<PlusOutlined />}>
+              Добавить группу
+            </Button>
           </Link>
           <List
             size="large"

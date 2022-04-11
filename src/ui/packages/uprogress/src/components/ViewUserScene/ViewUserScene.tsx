@@ -158,7 +158,7 @@ export const ViewUserScene = () => {
           </Button>
           <Link to={UI_URLS.user.list}>
             <Button type="primary" danger>
-              Отменить
+              Вернуться к списку
             </Button>
           </Link>
         </Form>

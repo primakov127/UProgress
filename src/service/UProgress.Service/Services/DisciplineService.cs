@@ -31,4 +31,18 @@ public class DisciplineService
 
         return discipline.Id;
     }
+
+    public async Task<bool> DeleteDiscipline(Guid id)
+    {
+        var discipline = _disciplineRepository.GetById(id);
+        if (discipline == null)
+        {
+            return false;
+        }
+
+        _disciplineRepository.Delete(discipline);
+        await _unitOfWork.SaveAsync();
+
+        return true;
+    }
 }

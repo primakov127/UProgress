@@ -24,3 +24,8 @@ public class GetDisciplineListResult
     public DisciplineType Type { get; set; }
     public string SpecialityShortName { get; set; }
 }
+
+public class DeleteDiscipline
+{
+    public Guid DisciplineId { get; set; }
+}
