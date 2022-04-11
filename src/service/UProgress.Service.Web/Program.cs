@@ -77,6 +77,7 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<GroupRepository>();
 builder.Services.AddScoped<DisciplineRepository>();
 builder.Services.AddScoped<SpecialityRepository>();
+builder.Services.AddScoped<TaskRepository>();
 
 var app = builder.Build();
 

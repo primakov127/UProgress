@@ -184,19 +184,4 @@ export const AddDisciplineScene = () => {
   );
 };
 
-const Container = styled.div`
-  tr {
-    border-top: 1px solid #c6cbd1;
-    background: #fff;
-  }
-
-  th,
-  td {
-    padding: 6px 13px;
-    border: 1px solid #dfe2e5;
-  }
-
-  table tr:nth-child(2n) {
-    background: #f6f8fa;
-  }
-`;
+const Container = styled.div``;

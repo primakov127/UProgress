@@ -40,10 +40,10 @@ public class DisciplineRepository : IRepository<Discipline>
 
     public void Delete(object id)
     {
-        var discipline = _context.Groups.Find(id);
+        var discipline = _context.Disciplines.Find(id);
         if (discipline != null)
         {
-            _context.Groups.Remove(discipline);
+            _context.Disciplines.Remove(discipline);
         }
     }
 }

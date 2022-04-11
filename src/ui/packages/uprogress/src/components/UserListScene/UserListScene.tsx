@@ -65,7 +65,7 @@ export const UserListScene = () => {
             renderItem={(u) => (
               <List.Item
                 actions={[
-                  <Link to={`${UI_URLS.user.view}/${u.id}`}>
+                  <Link to={UI_URLS.user.view.url(u.id)}>
                     <EditOutlined />
                   </Link>,
                   <Tooltip
@@ -92,9 +92,7 @@ export const UserListScene = () => {
                 <List.Item.Meta
                   avatar={<UserTypeIcon userType={u.userType} />}
                   title={
-                    <Link to={`${UI_URLS.user.view}/${u.id}`}>
-                      {u.fullName}
-                    </Link>
+                    <Link to={UI_URLS.user.view.url(u.id)}>{u.fullName}</Link>
                   }
                 />
               </List.Item>

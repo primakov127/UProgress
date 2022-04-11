@@ -1,17 +1,21 @@
 using UProgress.Contracts.Models;
 using UProgress.Service.Repositories;
+using Task = UProgress.Contracts.Models.Task;
 
 namespace UProgress.Service.Services;
 
 public class DisciplineService
 {
     private readonly DisciplineRepository _disciplineRepository;
+    private readonly TaskRepository _taskRepository;
     private readonly UnitOfWork _unitOfWork;
 
-    public DisciplineService(DisciplineRepository disciplineRepository, UnitOfWork unitOfWork)
+    public DisciplineService(DisciplineRepository disciplineRepository, UnitOfWork unitOfWork,
+        TaskRepository taskRepository)
     {
         _disciplineRepository = disciplineRepository;
         _unitOfWork = unitOfWork;
+        _taskRepository = taskRepository;
     }
 
     public async Task<Guid> CreateDiscipline(string name, string description, int semester, DisciplineType type,
@@ -41,6 +45,36 @@ public class DisciplineService
         }
 
         _disciplineRepository.Delete(discipline);
+        await _unitOfWork.SaveAsync();
+
+        return true;
+    }
+
+    public async Task<Guid> CreateTask(Guid disciplineId, string name, string description, bool isRequired)
+    {
+        var task = new Task
+        {
+            Name = name,
+            Description = description,
+            IsRequired = isRequired,
+            DisciplineId = disciplineId
+        };
+
+        _taskRepository.Insert(task);
+        await _unitOfWork.SaveAsync();
+
+        return task.Id;
+    }
+    
+    public async Task<bool> DeleteTask(Guid id)
+    {
+        var task = _taskRepository.GetById(id);
+        if (task == null)
+        {
+            return false;
+        }
+
+        _taskRepository.Delete(task);
         await _unitOfWork.SaveAsync();
 
         return true;

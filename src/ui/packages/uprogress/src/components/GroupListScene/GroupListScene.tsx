@@ -69,7 +69,7 @@ export const GroupListScene = () => {
                   description={
                     <p>
                       <span>Староста: </span>
-                      <Link to={`${UI_URLS.user.view}/${g.headId}`}>
+                      <Link to={UI_URLS.user.view.url(g.headId)}>
                         {g.headName}
                       </Link>
                     </p>

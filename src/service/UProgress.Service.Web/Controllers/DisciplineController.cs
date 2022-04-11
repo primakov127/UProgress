@@ -60,8 +60,42 @@ public class DisciplineController : ControllerBase
             return BadRequest();
         }
 
-        var isGroupDeleted = await _disciplineService.DeleteDiscipline(message.DisciplineId);
-        if (!isGroupDeleted)
+        var isDisciplineDeleted = await _disciplineService.DeleteDiscipline(message.DisciplineId);
+        if (!isDisciplineDeleted)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
+
+    [HttpPost("createtask")]
+    public async Task<IActionResult> CreateTask(CreateTask message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var taskId = await _disciplineService.CreateTask(message.DisciplineId, message.Name, message.Description,
+            message.IsRequired);
+
+        return Ok(new CreateTaskResult
+        {
+            TaskId = taskId
+        });
+    }
+    
+    [HttpPost("deletetask")]
+    public async Task<IActionResult> DeleteTask(DeleteTask message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var isTaskDeleted = await _disciplineService.DeleteTask(message.TaskId);
+        if (!isTaskDeleted)
         {
             return BadRequest();
         }

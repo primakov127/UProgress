@@ -1,3 +1,4 @@
+import { CreateTask, CreateTaskResult } from './../models/messages/CreateTask';
 import { API_URLS } from '../constants';
 import {
   DeleteDiscipline,
@@ -62,8 +63,26 @@ const deleteDiscipline = async (
   }
 };
 
+const createTask = async (message: CreateTask): Promise<CreateTaskResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(API_URLS.discipline.createTask, message)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      id: result.taskId,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as CreateDisciplineResult;
+  }
+};
+
 export const disciplineService = {
   createDiscipline,
   getDisciplineList,
   deleteDiscipline,
+  createTask,
 };
