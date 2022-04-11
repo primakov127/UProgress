@@ -12,6 +12,7 @@ import { AddUserScene } from '../components/AddUserScene/AddUserScene';
 import { ViewUserScene } from '../components/ViewUserScene/ViewUserScene';
 import { GroupListScene } from '../components/GroupListScene/GroupListScene';
 import { AddGroupScene } from '../components/AddGroupScene/AddGroupScene';
+import { AddDisciplineScene } from '../components/AddDisciplineScene/AddDisciplineScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -30,6 +31,8 @@ export const App = () => (
 
         <Route path={UI_URLS.group.list} component={GroupListScene} />
         <Route path={UI_URLS.group.add} component={AddGroupScene} />
+
+        <Route path={UI_URLS.discipline.add} component={AddDisciplineScene} />
       </Switch>
     </AppShell>
   </RecoilRoot>

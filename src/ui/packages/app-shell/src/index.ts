@@ -14,6 +14,7 @@ export * from './models/SubGroupType';
 export * from './models/User';
 export * from './models/UserType';
 export * from './models/UserRole';
+export * from './models/DisciplineType';
 
 // State
 export * from './state/userState';

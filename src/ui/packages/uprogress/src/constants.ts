@@ -27,6 +27,9 @@ export const API_URLS = {
     deleteGroup: 'group/delete',
     getSpecialityList: 'group/getspecialitylist',
   },
+  discipline: {
+    createDiscipline: 'discipline/create',
+  },
 };
 
 export const UI_URLS = {
@@ -45,5 +48,10 @@ export const UI_URLS = {
     list: '/group/list',
     add: '/group/add',
     view: '/group/view',
+  },
+  discipline: {
+    list: '/discipline/list',
+    add: '/discipline/add',
+    view: '/discipline/view',
   },
 };

@@ -1,5 +1,4 @@
 import { User } from '@ui/app-shell';
-import { message } from 'antd';
 import { API_URLS } from '../constants';
 import {
   ActivateUser,
