@@ -71,3 +71,17 @@ public class GetDisciplineResultTask
     public string Name { get; set; }
     public bool IsRequired { get; set; }
 }
+
+public class GetTask
+{
+    public Guid TaskId { get; set; }
+}
+
+public class GetTaskResult
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool IsRequired { get; set; }
+    public Guid DisciplineId { get; set; }
+}

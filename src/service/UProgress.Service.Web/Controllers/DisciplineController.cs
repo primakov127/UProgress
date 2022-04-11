@@ -141,4 +141,30 @@ public class DisciplineController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("gettask")]
+    public async Task<IActionResult> GetTaskAsync(GetTask message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var task = _taskRepository.GetById(message.TaskId);
+        if (task == null)
+        {
+            return BadRequest();
+        }
+
+        var result = new GetTaskResult
+        {
+            Id = task.Id,
+            Name = task.Name,
+            Description = task.Description,
+            IsRequired = task.IsRequired,
+            DisciplineId = task.DisciplineId
+        };
+
+        return Ok(result);
+    }
 }

@@ -1,3 +1,4 @@
+import { GetTask, GetTaskResult } from './../models/messages/GetTask';
 import {
   GetDiscipline,
   GetDisciplineResult,
@@ -14,7 +15,7 @@ import {
   CreateDiscipline,
   CreateDisciplineResult,
 } from './../models/messages/CreateDiscipline';
-import { Discipline } from '@ui/app-shell';
+import { Discipline, Task } from '@ui/app-shell';
 import { DeleteTask, DeleteTaskResult } from '../models/messages/DeleteTask';
 
 const createDiscipline = async (
@@ -125,6 +126,27 @@ const deleteTask = async (message: DeleteTask): Promise<DeleteTaskResult> => {
   }
 };
 
+const getTask = async (message: GetTask): Promise<GetTaskResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(API_URLS.discipline.getTask, message)
+    ).data as Task;
+
+    return {
+      isSuccessful: true,
+      id: result.id,
+      name: result.name,
+      description: result.description,
+      isRequired: result.isRequired,
+      disciplineId: result.disciplineId,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetTaskResult;
+  }
+};
+
 export const disciplineService = {
   createDiscipline,
   getDisciplineList,
@@ -132,4 +154,5 @@ export const disciplineService = {
   createTask,
   getDiscipline,
   deleteTask,
+  getTask,
 };

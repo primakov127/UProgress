@@ -34,6 +34,7 @@ export const API_URLS = {
     createTask: 'discipline/createtask',
     deleteTask: 'discipline/deletetask',
     getDiscipline: 'discipline/getdiscipline',
+    getTask: 'discipline/gettask',
   },
 };
 
