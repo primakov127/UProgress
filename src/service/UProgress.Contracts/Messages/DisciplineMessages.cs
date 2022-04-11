@@ -1,4 +1,5 @@
 using UProgress.Contracts.Models;
+using Task = UProgress.Contracts.Models.Task;
 
 namespace UProgress.Contracts.Messages;
 
@@ -46,4 +47,27 @@ public class CreateTaskResult
 public class DeleteTask
 {
     public Guid TaskId { get; set; }
+}
+
+public class GetDiscipline
+{
+    public Guid DisciplineId { get; set; }
+}
+
+public class GetDisciplineResult
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public int? Semester { get; set; }
+    public DisciplineType Type { get; set; }
+    public Guid? SpecialityId { get; set; }
+    public IEnumerable<GetDisciplineResultTask> Tasks { get; set; }
+}
+
+public class GetDisciplineResultTask
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public bool IsRequired { get; set; }
 }

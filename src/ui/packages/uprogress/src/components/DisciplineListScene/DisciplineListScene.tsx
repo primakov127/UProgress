@@ -37,7 +37,7 @@ export const DisciplineListScene = () => {
       },
     });
   };
- 
+
   const getType = (key: DisciplineType) => {
     switch (key) {
       case DisciplineType.Exam:
@@ -71,7 +71,7 @@ export const DisciplineListScene = () => {
             renderItem={(d) => (
               <List.Item
                 actions={[
-                  <Link to={`${UI_URLS.discipline.view}/${d.id}`}>
+                  <Link to={UI_URLS.discipline.view.url(d.id)}>
                     <EditOutlined />
                   </Link>,
                   <Button
@@ -83,9 +83,7 @@ export const DisciplineListScene = () => {
               >
                 <List.Item.Meta
                   title={
-                    <Link to={`${UI_URLS.discipline.view}/${d.id}`}>
-                      {d.name}
-                    </Link>
+                    <Link to={UI_URLS.discipline.view.url(d.id)}>{d.name}</Link>
                   }
                   description={
                     <>

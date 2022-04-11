@@ -32,6 +32,8 @@ export const API_URLS = {
     getDisciplineList: 'discipline/getdisciplinelist',
     deleteDiscipline: 'discipline/delete',
     createTask: 'discipline/createtask',
+    deleteTask: 'discipline/deletetask',
+    getDiscipline: 'discipline/getdiscipline',
   },
 };
 
@@ -58,10 +60,18 @@ export const UI_URLS = {
   discipline: {
     list: '/discipline/list',
     add: '/discipline/add',
-    view: '/discipline/view',
+    view: {
+      template: '/discipline/view/:disciplineId',
+      url: (disciplineId: string) => `/discipline/view/${disciplineId}`,
+    },
     addTask: {
       template: '/discipline/addtask/:disciplineId',
       url: (disciplineId: string) => `/discipline/addtask/${disciplineId}`,
+    },
+    viewTask: {
+      template: '/discipline/:disciplineId/viewtask/:taskId',
+      url: (disciplineId: string, taskId: string) =>
+        `/discipline/${disciplineId}/viewtask/${taskId}`,
     },
   },
 };

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DisciplineType, useEffectAsync, useLoading } from '@ui/app-shell';
+import { DisciplineType, Speciality, useEffectAsync, useLoading } from '@ui/app-shell';
 import {
   Button,
   Card,
@@ -16,7 +16,6 @@ import ReactMarkdown from 'react-markdown';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
-import { Speciality } from '../../models/Speciality';
 import { disciplineService } from '../../services/disciplineService';
 import { groupService } from '../../services/groupService';
 import remarkGfm from 'remark-gfm';

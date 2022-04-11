@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SubGroupType, useEffectAsync, useLoading } from '@ui/app-shell';
+import {
+  Speciality,
+  SubGroupType,
+  useEffectAsync,
+  useLoading,
+} from '@ui/app-shell';
 import {
   Button,
   DatePicker,
@@ -14,7 +19,6 @@ import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
-import { Speciality } from '../../models/Speciality';
 import { StudentListItem } from '../../models/StudentListItem';
 import { groupService } from '../../services/groupService';
 import { userService } from '../../services/userService';

@@ -11,12 +11,15 @@ namespace UProgress.Service.Web.Controllers;
 public class DisciplineController : ControllerBase
 {
     private readonly DisciplineRepository _disciplineRepository;
+    private readonly TaskRepository _taskRepository;
     private readonly DisciplineService _disciplineService;
 
-    public DisciplineController(DisciplineService disciplineService, DisciplineRepository disciplineRepository)
+    public DisciplineController(DisciplineService disciplineService, DisciplineRepository disciplineRepository,
+        TaskRepository taskRepository)
     {
         _disciplineService = disciplineService;
         _disciplineRepository = disciplineRepository;
+        _taskRepository = taskRepository;
     }
 
     [HttpPost("create")]
@@ -85,7 +88,7 @@ public class DisciplineController : ControllerBase
             TaskId = taskId
         });
     }
-    
+
     [HttpPost("deletetask")]
     public async Task<IActionResult> DeleteTask(DeleteTask message)
     {
@@ -101,5 +104,41 @@ public class DisciplineController : ControllerBase
         }
 
         return Ok();
+    }
+
+    [HttpPost("getdiscipline")]
+    public async Task<IActionResult> GetDisciplineAsync(GetDiscipline message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var discipline = _disciplineRepository.GetById(message.DisciplineId);
+        if (discipline == null)
+        {
+            return BadRequest();
+        }
+
+        var disciplineTasks = _taskRepository.Get().Where(t => t.DisciplineId == discipline.Id).Select(t =>
+            new GetDisciplineResultTask
+            {
+                Id = t.Id,
+                Name = t.Name,
+                IsRequired = t.IsRequired
+            });
+
+        var result = new GetDisciplineResult
+        {
+            Id = discipline.Id,
+            Name = discipline.Name,
+            Description = discipline.Description,
+            Semester = discipline.Semester,
+            Type = discipline.Type,
+            SpecialityId = discipline.SpecialityId,
+            Tasks = disciplineTasks
+        };
+
+        return Ok(result);
     }
 }

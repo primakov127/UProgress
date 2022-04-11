@@ -15,6 +15,8 @@ import { AddGroupScene } from '../components/AddGroupScene/AddGroupScene';
 import { AddDisciplineScene } from '../components/AddDisciplineScene/AddDisciplineScene';
 import { DisciplineListScene } from '../components/DisciplineListScene/DisciplineListScene';
 import { AddTaskScene } from '../components/AddTaskScene/AddTaskScene';
+import { ViewDisciplineScene } from '../components/ViewDisciplineScene/ViewDisciplineScene';
+import { ViewTaskScene } from '../components/ViewTaskScene/ViewTaskScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -34,8 +36,16 @@ export const App = () => (
         <Route path={UI_URLS.discipline.list} component={DisciplineListScene} />
         <Route path={UI_URLS.discipline.add} component={AddDisciplineScene} />
         <Route
+          path={UI_URLS.discipline.view.template}
+          component={ViewDisciplineScene}
+        />
+        <Route
           path={UI_URLS.discipline.addTask.template}
           component={AddTaskScene}
+        />
+        <Route
+          path={UI_URLS.discipline.viewTask.template}
+          component={ViewTaskScene}
         />
       </Switch>
     </AppShell>

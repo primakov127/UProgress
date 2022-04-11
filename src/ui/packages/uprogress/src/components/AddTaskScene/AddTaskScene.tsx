@@ -32,7 +32,7 @@ export const AddTaskScene = () => {
 
       if (result.isSuccessful) {
         notification.success({ message: 'Задание успешно создано' });
-        history.push(UI_URLS.discipline.list);
+        history.push(UI_URLS.discipline.view.url(disciplineId));
       }
     } catch (e: unknown) {
       if (!axios.isAxiosError(e)) {
@@ -87,9 +87,9 @@ export const AddTaskScene = () => {
         <Button block type="primary" htmlType="submit" loading={loading}>
           Создать
         </Button>
-        <Link to={UI_URLS.discipline.list}>
+        <Link to={UI_URLS.discipline.view.url(disciplineId)}>
           <Button type="primary" danger>
-            Вернуться к списку
+            Вернуться к дисциплине
           </Button>
         </Link>
       </Form>
