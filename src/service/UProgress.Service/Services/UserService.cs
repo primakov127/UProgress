@@ -104,4 +104,14 @@ public class UserService
     {
         return _userRepository.Get().Where(u => u.Role == UserType.Student && u.GroupId == null).ToList();
     }
+
+    public List<User> GetAllStudents()
+    {
+        return _userRepository.Get().Where(u => u.Role == UserType.Student).ToList();
+    }
+
+    public List<User> GetAllTeachers()
+    {
+        return _userRepository.Get().Where(u => u.Role == UserType.Teacher || u.Role == UserType.Dean).ToList();
+    }
 }

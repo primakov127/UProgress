@@ -127,9 +127,42 @@ const getUser = async (message: GetUser): Promise<GetUserResult> => {
   }
 };
 
+const getStudentWithoutGroupList = async (): Promise<GetStudentListResult> => {
+  try {
+    const result = (
+      await getHttpClient().get(API_URLS.user.getStudentWithoutGroupList)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetStudentListResult;
+  }
+};
+
 const getStudentList = async (): Promise<GetStudentListResult> => {
   try {
     const result = (await getHttpClient().get(API_URLS.user.getStudentList))
+      .data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetStudentListResult;
+  }
+};
+
+const getTeacherList = async (): Promise<GetStudentListResult> => {
+  try {
+    const result = (await getHttpClient().get(API_URLS.user.getTeacherList))
       .data;
 
     return {
@@ -150,5 +183,7 @@ export const userService = {
   deactivateUser,
   activateUser,
   getUser,
+  getStudentWithoutGroupList,
   getStudentList,
+  getTeacherList,
 };

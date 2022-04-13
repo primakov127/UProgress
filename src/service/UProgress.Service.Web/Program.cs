@@ -72,12 +72,18 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<DisciplineService>();
+builder.Services.AddScoped<AssignService>();
+builder.Services.AddScoped<TaskAnswerService>();
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<GroupRepository>();
 builder.Services.AddScoped<DisciplineRepository>();
 builder.Services.AddScoped<SpecialityRepository>();
 builder.Services.AddScoped<TaskRepository>();
+builder.Services.AddScoped<StudentDisciplineRepository>();
+builder.Services.AddScoped<TeacherGroupDisciplineRepository>();
+builder.Services.AddScoped<TaskAnswerRepository>();
+builder.Services.AddScoped<AnswerHistoryRepository>();
 
 var app = builder.Build();
 

@@ -208,10 +208,34 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("getstudentwithoutgrouplist")]
+    public async Task<IActionResult> GetStudentWithoutGroupList()
+    {
+        var result = _userService.GetAllWithoutGroupStudents().Select(s => new GetStudentListResult
+        {
+            Id = s.Id,
+            FullName = s.FullName
+        });
+
+        return Ok(result);
+    }
+
     [HttpGet("getstudentlist")]
     public async Task<IActionResult> GetStudentList()
     {
-        var result = _userService.GetAllWithoutGroupStudents().Select(s => new GetStudentListResult
+        var result = _userService.GetAllStudents().Select(s => new GetStudentListResult
+        {
+            Id = s.Id,
+            FullName = s.FullName
+        });
+
+        return Ok(result);
+    }
+
+    [HttpGet("getteacherlist")]
+    public async Task<IActionResult> GetTeacherList()
+    {
+        var result = _userService.GetAllTeachers().Select(s => new GetStudentListResult
         {
             Id = s.Id,
             FullName = s.FullName

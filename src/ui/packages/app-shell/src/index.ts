@@ -19,6 +19,7 @@ export * from './models/DisciplineType';
 export * from './models/Discipline';
 export * from './models/Speciality';
 export * from './models/Task';
+export * from './models/AnswerStatus';
 
 // State
 export * from './state/userState';

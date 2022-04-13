@@ -19,7 +19,9 @@ export const API_URLS = {
     deactivateUser: 'user/deactivate',
     activateUser: 'user/activate',
     getUser: 'user/getuser',
+    getStudentWithoutGroupList: 'user/getstudentwithoutgrouplist',
     getStudentList: 'user/getstudentlist',
+    getTeacherList: 'user/getteacherlist',
   },
   group: {
     createGroup: 'group/create',
@@ -35,6 +37,17 @@ export const API_URLS = {
     deleteTask: 'discipline/deletetask',
     getDiscipline: 'discipline/getdiscipline',
     getTask: 'discipline/gettask',
+  },
+  assign: {
+    assignDisciplineToStudent: 'assign/assigndisciplinetostudent',
+    assignDisciplineToGroup: 'assign/assigndisciplinetogroup',
+  },
+  taskAnswer: {
+    createTaskAnswer: 'taskanswer/createtaskanswer',
+    getTaskAnswer: 'taskanswer/gettaskanswer',
+    requestApprove: 'taskanswer/requestapprove',
+    approve: 'taskanswer/approve',
+    reject: 'taskanswer/reject',
   },
 };
 
@@ -73,6 +86,16 @@ export const UI_URLS = {
       template: '/discipline/:disciplineId/viewtask/:taskId',
       url: (disciplineId: string, taskId: string) =>
         `/discipline/${disciplineId}/viewtask/${taskId}`,
+    },
+  },
+  taskAnswer: {
+    add: {
+      template: '/taskanswer/add/:taskId',
+      url: (taskId: string) => `/taskanswer/add/${taskId}`,
+    },
+    view: {
+      template: '/taskanswer/view/:taskAnswerId',
+      url: (taskAnswerId: string) => `/taskanswer/view/${taskAnswerId}`,
     },
   },
 };

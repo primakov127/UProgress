@@ -58,7 +58,7 @@ export const AddGroupScene = () => {
       setSpecialities(getSpecialityListResult.list);
     }
 
-    const getStudentListResult = await userService.getStudentList();
+    const getStudentListResult = await userService.getStudentWithoutGroupList();
     if (getStudentListResult.isSuccessful) {
       setStudents(getStudentListResult.list);
     }
