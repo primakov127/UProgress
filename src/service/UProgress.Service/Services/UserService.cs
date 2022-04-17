@@ -52,7 +52,7 @@ public class UserService
 
     public async Task<bool> DeactivateUser(Guid id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetById(id);
         if (user == null)
         {
             return false;
@@ -67,7 +67,7 @@ public class UserService
 
     public async Task<bool> ActivateUser(Guid id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetById(id);
         if (user == null)
         {
             return false;
@@ -82,7 +82,7 @@ public class UserService
 
     public async Task<bool> IsActiveUser(Guid id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetById(id);
 
         return user is {IsActive: true};
     }

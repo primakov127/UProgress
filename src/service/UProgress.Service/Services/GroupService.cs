@@ -19,7 +19,7 @@ public class GroupService
 
     public async Task<Guid> CreateGroup(int startYear, int graduatedYear, int number, Guid headId, Guid specialityId)
     {
-        var speciality = _specialityRepository.GetById(specialityId);
+        var speciality = await _specialityRepository.GetById(specialityId);
         var groupName = $"{speciality.ShortName} {startYear}-{number}";
         var group = new Group
         {

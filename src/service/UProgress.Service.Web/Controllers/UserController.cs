@@ -13,6 +13,7 @@ namespace UProgress.Service.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
@@ -30,7 +31,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("getcurrentuser")]
-    [Authorize(Policy = AuthClaims.GetCurrentUser)]
+    // [Authorize(Policy = AuthClaims.GetCurrentUser)]
     public async Task<IActionResult> GetCurrentUserAsync()
     {
         var user = await _userService.GetUserByHttpContext(HttpContext);
@@ -39,7 +40,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        var appUser = _userRepository.GetById(user.Id);
+        var appUser = await _userRepository.GetById(user.Id);
         if (appUser == null)
         {
             return BadRequest();
@@ -185,7 +186,7 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        var appUser = _userRepository.GetById(user.Id);
+        var appUser = await _userRepository.GetById(user.Id);
         if (appUser == null)
         {
             return BadRequest();

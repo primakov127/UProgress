@@ -15,8 +15,9 @@ import {
   CreateDiscipline,
   CreateDisciplineResult,
 } from './../models/messages/CreateDiscipline';
-import { Discipline, Task } from '@ui/app-shell';
+import { Discipline, Speciality, Task } from '@ui/app-shell';
 import { DeleteTask, DeleteTaskResult } from '../models/messages/DeleteTask';
+import { GetMyDisciplinesResult } from '../models/messages/GetMyDisciplines';
 
 const createDiscipline = async (
   message: CreateDiscipline
@@ -60,7 +61,7 @@ const getDiscipline = async (
   try {
     const result = (
       await getHttpClient().post(API_URLS.discipline.getDiscipline, message)
-    ).data as Discipline;
+    ).data;
 
     return {
       isSuccessful: true,
@@ -71,6 +72,7 @@ const getDiscipline = async (
       type: result.type,
       specialityId: result.specialityId,
       tasks: result.tasks,
+      speciality: { shortName: result.specialityShortName } as Speciality,
     };
   } catch (e: unknown) {
     return {
@@ -130,7 +132,7 @@ const getTask = async (message: GetTask): Promise<GetTaskResult> => {
   try {
     const result = (
       await getHttpClient().post(API_URLS.discipline.getTask, message)
-    ).data as Task;
+    ).data;
 
     return {
       isSuccessful: true,
@@ -139,11 +141,30 @@ const getTask = async (message: GetTask): Promise<GetTaskResult> => {
       description: result.description,
       isRequired: result.isRequired,
       disciplineId: result.disciplineId,
+      disciplineName: result.disciplineName,
+      taskAnswerId: result.taskAnswerId,
     };
   } catch (e: unknown) {
     return {
       isSuccessful: false,
     } as GetTaskResult;
+  }
+};
+
+const getMyDisciplines = async (): Promise<GetMyDisciplinesResult> => {
+  try {
+    const result = (
+      await getHttpClient().get(API_URLS.discipline.myDisciplines)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetMyDisciplinesResult;
   }
 };
 
@@ -155,4 +176,5 @@ export const disciplineService = {
   getDiscipline,
   deleteTask,
   getTask,
+  getMyDisciplines,
 };

@@ -13,9 +13,9 @@ public class DisciplineRepository : IRepository<Discipline>
         _context = context;
     }
 
-    public Discipline? GetById(object id)
+    public async Task<Discipline?> GetById(object id)
     {
-        return _context.Disciplines.Find(id);
+        return await _context.Disciplines.FindAsync(id);
     }
 
     public IQueryable<Discipline> Get()

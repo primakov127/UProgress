@@ -5,4 +5,8 @@ export type GetTask = {
   taskId: string;
 };
 
-export type GetTaskResult = BaseResult & Task;
+export type GetTaskResult = BaseResult &
+  Task & {
+    disciplineName: string;
+    taskAnswerId?: string;
+  };

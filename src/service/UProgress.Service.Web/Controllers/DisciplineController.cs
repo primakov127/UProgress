@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UProgress.Contracts.Messages;
+using UProgress.Contracts.Models;
 using UProgress.Service.Repositories;
 using UProgress.Service.Services;
 
@@ -8,18 +10,26 @@ namespace UProgress.Service.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class DisciplineController : ControllerBase
 {
     private readonly DisciplineRepository _disciplineRepository;
     private readonly TaskRepository _taskRepository;
+    private readonly StudentDisciplineRepository _studentDisciplineRepository;
+    private readonly TaskAnswerRepository _taskAnswerRepository;
     private readonly DisciplineService _disciplineService;
+    private readonly UserService _userService;
 
     public DisciplineController(DisciplineService disciplineService, DisciplineRepository disciplineRepository,
-        TaskRepository taskRepository)
+        TaskRepository taskRepository, UserService userService, StudentDisciplineRepository studentDisciplineRepository,
+        TaskAnswerRepository taskAnswerRepository)
     {
         _disciplineService = disciplineService;
         _disciplineRepository = disciplineRepository;
         _taskRepository = taskRepository;
+        _userService = userService;
+        _studentDisciplineRepository = studentDisciplineRepository;
+        _taskAnswerRepository = taskAnswerRepository;
     }
 
     [HttpPost("create")]
@@ -114,7 +124,8 @@ public class DisciplineController : ControllerBase
             return BadRequest();
         }
 
-        var discipline = _disciplineRepository.GetById(message.DisciplineId);
+        var discipline = _disciplineRepository.Get().Include(d => d.Speciality)
+            .FirstOrDefault(d => d.Id == message.DisciplineId);
         if (discipline == null)
         {
             return BadRequest();
@@ -136,6 +147,7 @@ public class DisciplineController : ControllerBase
             Semester = discipline.Semester,
             Type = discipline.Type,
             SpecialityId = discipline.SpecialityId,
+            SpecialityShortName = discipline.Speciality.ShortName,
             Tasks = disciplineTasks
         };
 
@@ -150,11 +162,15 @@ public class DisciplineController : ControllerBase
             return BadRequest();
         }
 
-        var task = _taskRepository.GetById(message.TaskId);
+        var task = _taskRepository.Get().Include(t => t.Discipline).FirstOrDefault(t => t.Id == message.TaskId);
         if (task == null)
         {
             return BadRequest();
         }
+
+        var user = await _userService.GetUserByHttpContext(HttpContext);
+        var taskAnswer = _taskAnswerRepository.Get()
+            .FirstOrDefault(ta => user != null && ta.StudentId == user.Id && ta.TaskId == task.Id);
 
         var result = new GetTaskResult
         {
@@ -162,8 +178,44 @@ public class DisciplineController : ControllerBase
             Name = task.Name,
             Description = task.Description,
             IsRequired = task.IsRequired,
-            DisciplineId = task.DisciplineId
+            DisciplineId = task.DisciplineId,
+            DisciplineName = task.Discipline.Name,
+            TaskAnswerId = taskAnswer?.Id
         };
+
+        return Ok(result);
+    }
+
+    [HttpGet("mydisciplines")]
+    public async Task<IActionResult> GetMyDisciplines()
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var student = await _userService.GetUserByHttpContext(HttpContext);
+        if (student == null)
+        {
+            return BadRequest();
+        }
+
+        var result = _studentDisciplineRepository.Get().Where(sd => sd.StudentId == student.Id)
+            .Include(sd => sd.Discipline).ThenInclude(d => d.Speciality).Include(sd => sd.Discipline)
+            .ThenInclude(d => d.Tasks).ThenInclude(t => t.Answers).Select(sd =>
+                new GetMyDisciplinesResult
+                {
+                    Id = sd.Discipline.Id,
+                    Name = sd.Discipline.Name,
+                    Semester = sd.Discipline.Semester,
+                    Type = sd.Discipline.Type,
+                    SpecialityShortName = sd.Discipline.Speciality.ShortName,
+                    FinalMark = sd.Mark,
+                    Progress = (int) ((double) sd.Discipline.Tasks.Select(t =>
+                            t.Answers.FirstOrDefault(a =>
+                                a.StudentId == sd.StudentId && a.Status == AnswerStatus.Approved))
+                        .Count(ta => ta != null) / (double) sd.Discipline.Tasks.Count * 100)
+                });
 
         return Ok(result);
     }

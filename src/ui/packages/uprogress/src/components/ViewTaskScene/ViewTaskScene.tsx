@@ -1,11 +1,21 @@
-import { Task, useEffectAsync, useLoading } from '@ui/app-shell';
-import { Button, Card, Form, Input, Switch } from 'antd';
+import { useEffectAsync, useLoading, useRole } from '@ui/app-shell';
+import {
+  Button,
+  Card,
+  Descriptions,
+  Form,
+  Input,
+  Spin,
+  Switch,
+  Tag,
+} from 'antd';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
+import { GetTaskResult } from '../../models/messages/GetTask';
 import { disciplineService } from '../../services/disciplineService';
 import { MarkdownContainer } from '../MarkdownContainer/MarkdownContainer';
 
@@ -17,20 +27,28 @@ export const ViewTaskScene = () => {
   }>();
   const history = useHistory();
   const { loading, loadingHandler } = useLoading();
-  const [task, setTask] = useState<Task>();
+  const [task, setTask] = useState<GetTaskResult>();
+  const [isLoading, setIsLoading] = useState(false);
+  const { isAdmin, isStudent } = useRole();
 
   useEffectAsync(async () => {
+    setIsLoading(true);
+
     const result = await disciplineService.getTask({
       taskId: taskId,
     });
     if (result.isSuccessful) {
       setTask(result);
     }
+
+    setIsLoading(false);
   }, [taskId]);
 
-  return (
+  return isLoading ? (
+    <Spin spinning size="large" />
+  ) : task ? (
     <Container>
-      {task && (
+      {isAdmin && (
         <Form
           form={form}
           onSubmitCapture={() => console.log('ViewTaskScene Add')}
@@ -73,17 +91,6 @@ export const ViewTaskScene = () => {
             />
           </Form.Item>
 
-          <Card title="Предпросмотр задания">
-            <MarkdownContainer>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                className="markdown-body"
-              >
-                {task.description}
-              </ReactMarkdown>
-            </MarkdownContainer>
-          </Card>
-
           <Button block type="primary" htmlType="submit" loading={loading}>
             Создать
           </Button>
@@ -94,8 +101,54 @@ export const ViewTaskScene = () => {
           </Link>
         </Form>
       )}
+      {!isAdmin && (
+        <Descriptions
+          title={
+            <h1>
+              Задание: <i>{task.name}</i>
+              {isStudent && (
+                <Link
+                  to={
+                    task.taskAnswerId
+                      ? UI_URLS.taskAnswer.view.url(task.taskAnswerId)
+                      : UI_URLS.taskAnswer.add.url(taskId)
+                  }
+                  style={{ float: 'right' }}
+                >
+                  <Button type="primary">
+                    {task.taskAnswerId ? 'Мой ответ' : 'Создать ответ'}
+                  </Button>
+                </Link>
+              )}
+            </h1>
+          }
+        >
+          <Descriptions.Item label="Обязательно">
+            {task.isRequired ? (
+              <Tag color="volcano">Да</Tag>
+            ) : (
+              <Tag color="green">Нет</Tag>
+            )}
+          </Descriptions.Item>
+          <Descriptions.Item label="Дисциплина">
+            <Link to={UI_URLS.discipline.view.url(task.disciplineId)}>
+              {task.disciplineName}
+            </Link>
+          </Descriptions.Item>
+        </Descriptions>
+      )}
+      <Card
+        title={<h2>{isAdmin ? 'Предпросмотр задания:' : 'Задание:'}</h2>}
+        bordered={false}
+      >
+        <MarkdownContainer>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-body">
+            {task.description}
+          </ReactMarkdown>
+        </MarkdownContainer>
+      </Card>
     </Container>
-  );
+  ) : null;
 };
 
 const Container = styled.div``;

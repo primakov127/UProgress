@@ -5,10 +5,12 @@ import {
   Speciality,
   useEffectAsync,
   useLoading,
+  useRole,
 } from '@ui/app-shell';
 import {
   Button,
   Card,
+  Descriptions,
   Form,
   Input,
   InputNumber,
@@ -17,6 +19,7 @@ import {
   notification,
   Radio,
   Select,
+  Spin,
   Tag,
 } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
@@ -29,6 +32,7 @@ import { UI_URLS } from '../../constants';
 import { disciplineService } from '../../services/disciplineService';
 import { groupService } from '../../services/groupService';
 import { MarkdownContainer } from '../MarkdownContainer/MarkdownContainer';
+import { getType } from '../../utils/stringUtils';
 
 export const ViewDisciplineScene = () => {
   const [form] = Form.useForm();
@@ -37,8 +41,12 @@ export const ViewDisciplineScene = () => {
   const [discipline, setDiscipline] = useState<Discipline>();
   const [specialities, setSpecialities] = useState<Speciality[]>();
   const { loading, loadingHandler } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
+  const { isAdmin } = useRole();
 
   useEffectAsync(async () => {
+    setIsLoading(true);
+
     const result = await disciplineService.getDiscipline({
       disciplineId: disciplineId,
     });
@@ -50,6 +58,8 @@ export const ViewDisciplineScene = () => {
     if (getSpecialityListResult.isSuccessful) {
       setSpecialities(getSpecialityListResult.list);
     }
+
+    setIsLoading(false);
   }, [disciplineId]);
 
   const showTaskDeleteConfirm = (id: string, name: string) => {
@@ -74,9 +84,11 @@ export const ViewDisciplineScene = () => {
     });
   };
 
-  return (
+  return isLoading ? (
+    <Spin spinning size="large" />
+  ) : discipline ? (
     <Container>
-      {discipline && (
+      {isAdmin && (
         <Form
           form={form}
           onSubmitCapture={() => console.log('ViewDisciplineScene Add')}
@@ -187,59 +199,6 @@ export const ViewDisciplineScene = () => {
             />
           </Form.Item>
 
-          <Card title="Предпросмотр описания">
-            <MarkdownContainer>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                className="markdown-body"
-              >
-                {discipline.description}
-              </ReactMarkdown>
-            </MarkdownContainer>
-          </Card>
-
-          <Card title="Задания">
-            <List
-              size="large"
-              itemLayout="horizontal"
-              dataSource={discipline.tasks}
-              renderItem={(t) => (
-                <List.Item
-                  actions={[
-                    <Button
-                      type="text"
-                      icon={<DeleteOutlined />}
-                      onClick={() => showTaskDeleteConfirm(t.id, t.name)}
-                    />,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={
-                      <Link
-                        to={UI_URLS.discipline.viewTask.url(
-                          discipline.id,
-                          t.id
-                        )}
-                      >
-                        {t.name}
-                      </Link>
-                    }
-                    description={
-                      t.isRequired ? (
-                        <Tag color="volcano">Обязательно</Tag>
-                      ) : undefined
-                    }
-                  />
-                </List.Item>
-              )}
-            />
-            <Link to={UI_URLS.discipline.addTask.url(discipline.id)}>
-              <Button type="dashed" icon={<PlusOutlined />}>
-                Добавить задание
-              </Button>
-            </Link>
-          </Card>
-
           <Button block type="primary" htmlType="submit" loading={loading}>
             Создать
           </Button>
@@ -250,8 +209,88 @@ export const ViewDisciplineScene = () => {
           </Link>
         </Form>
       )}
+      {!isAdmin && (
+        <Descriptions
+          title={
+            <h1>
+              Дисциплина: <i>{discipline.name}</i>
+            </h1>
+          }
+        >
+          <Descriptions.Item label="Семестр">
+            <Tag color="magenta">{`${discipline.semester} семестр`}</Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label="Тип">
+            <Tag color="gold">{getType(discipline.type)}</Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label="Специальность">
+            <Tag color="geekblue">{discipline.speciality?.shortName}</Tag>
+          </Descriptions.Item>
+        </Descriptions>
+      )}
+      <Card
+        title={<h2>{isAdmin ? 'Предпросмотр описания:' : 'Описание:'}</h2>}
+        bordered={false}
+      >
+        <MarkdownContainer>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} className="markdown-body">
+            {discipline.description}
+          </ReactMarkdown>
+        </MarkdownContainer>
+      </Card>
+
+      <Card bordered={false} title={<h2>Задания:</h2>}>
+        <List
+          size="large"
+          itemLayout="horizontal"
+          dataSource={discipline.tasks}
+          renderItem={(t) => (
+            <List.Item
+              actions={
+                isAdmin
+                  ? [
+                      <Button
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        onClick={() => showTaskDeleteConfirm(t.id, t.name)}
+                      />,
+                    ]
+                  : []
+              }
+            >
+              <List.Item.Meta
+                title={
+                  <Link
+                    to={UI_URLS.discipline.viewTask.url(discipline.id, t.id)}
+                  >
+                    {t.name}
+                  </Link>
+                }
+                description={
+                  t.isRequired ? (
+                    <Tag color="volcano">Обязательно</Tag>
+                  ) : undefined
+                }
+              />
+            </List.Item>
+          )}
+        />
+        {isAdmin && (
+          <div style={{ textAlign: 'center' }}>
+            <Link to={UI_URLS.discipline.addTask.url(discipline.id)}>
+              <Button type="dashed" icon={<PlusOutlined />}>
+                Добавить задание
+              </Button>
+            </Link>
+          </div>
+        )}
+      </Card>
     </Container>
-  );
+  ) : null;
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  .ant-card-head {
+    padding: 0;
+  }
+`;

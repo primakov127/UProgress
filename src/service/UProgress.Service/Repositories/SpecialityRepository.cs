@@ -7,15 +7,15 @@ namespace UProgress.Service.Repositories;
 public class SpecialityRepository : IRepository<Speciality>
 {
     private readonly AppDbContext _context;
-    
+
     public SpecialityRepository(AppDbContext context)
     {
         _context = context;
     }
-    
-    public Speciality? GetById(object id)
+
+    public async Task<Speciality?> GetById(object id)
     {
-        return _context.Specialities.Find(id);
+        return await _context.Specialities.FindAsync(id);
     }
 
     public IQueryable<Speciality> Get()

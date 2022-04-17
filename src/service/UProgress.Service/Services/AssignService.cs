@@ -27,13 +27,13 @@ public class AssignService
 
     public async Task<bool> AssignDisciplineToStudent(Guid disciplineId, Guid studentId)
     {
-        var discipline = _disciplineRepository.GetById(disciplineId);
+        var discipline = await _disciplineRepository.GetById(disciplineId);
         if (discipline == null)
         {
             return false;
         }
 
-        var student = _userRepository.GetById(studentId);
+        var student = await _userRepository.GetById(studentId);
         if (student == null)
         {
             return false;
@@ -55,25 +55,25 @@ public class AssignService
     public async Task<bool> AssignDisciplineToGroup(Guid disciplineId, Guid groupId, Guid firstTeacherId,
         Guid? secondTeacherId)
     {
-        var discipline = _disciplineRepository.GetById(disciplineId);
+        var discipline = await _disciplineRepository.GetById(disciplineId);
         if (discipline == null)
         {
             return false;
         }
 
-        var group = _groupRepository.GetById(groupId);
+        var group = await _groupRepository.GetById(groupId);
         if (group == null)
         {
             return false;
         }
 
-        var firstTeacher = _userRepository.GetById(firstTeacherId);
+        var firstTeacher = await _userRepository.GetById(firstTeacherId);
         if (firstTeacher == null)
         {
             return false;
         }
 
-        var secondTeacher = secondTeacherId == null ? null : _userRepository.GetById(secondTeacherId);
+        var secondTeacher = secondTeacherId == null ? null : await _userRepository.GetById(secondTeacherId);
         if (secondTeacher == null || secondTeacher.Id == firstTeacher.Id)
         {
             var teacherGroupDiscipline = new TeacherGroupDiscipline

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UProgress.Contracts.Messages;
@@ -9,6 +10,7 @@ namespace UProgress.Service.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class GroupController : ControllerBase
 {
     private readonly GroupRepository _groupRepository;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UProgress.Contracts.Messages;
@@ -9,6 +10,7 @@ namespace UProgress.Service.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TaskAnswerController : ControllerBase
 {
     private readonly TaskAnswerService _taskAnswerService;
@@ -50,6 +52,7 @@ public class TaskAnswerController : ControllerBase
         }
 
         var taskAnswer = _taskAnswerRepository.Get().Include(ta => ta.History).ThenInclude(h => h.User)
+            .Include(ta => ta.Task).ThenInclude(t => t.Discipline)
             .FirstOrDefault(ta => ta.Id == message.TaskAnswerId);
         if (taskAnswer == null)
         {
@@ -60,10 +63,14 @@ public class TaskAnswerController : ControllerBase
         {
             Id = taskAnswer.Id,
             Mark = taskAnswer.Mark,
+            Answer = taskAnswer.Answer,
             Status = taskAnswer.Status,
             TaskId = taskAnswer.TaskId,
+            TaskName = taskAnswer.Task.Name,
             StudentId = taskAnswer.StudentId,
             ApprovedById = taskAnswer.ApprovedById,
+            DisciplineId = taskAnswer.Task.Discipline.Id,
+            DisciplineName = taskAnswer.Task.Discipline.Name,
             History = taskAnswer.History.Select(h => new GetTaskAnswerResultHistory
             {
                 Date = h.Date,

@@ -14,6 +14,7 @@ import { AssignToStudent } from '../AssignToStudent/AssignToStudent';
 import { AssignToGroup } from '../AssignToGroup/AssignToGroup';
 import { GroupListItem } from '../../models/GroupListItem';
 import { groupService } from '../../services/groupService';
+import { getType } from '../../utils/stringUtils';
 
 export const DisciplineListScene = () => {
   const [disciplines, setDisciplines] = useState<DisciplineListItem[]>();
@@ -64,23 +65,6 @@ export const DisciplineListScene = () => {
         notification.error({ message: 'Не удалось удалить дисциплину' });
       },
     });
-  };
-
-  const getType = (key: DisciplineType) => {
-    switch (key) {
-      case DisciplineType.Exam:
-        return 'Экзамен';
-      case DisciplineType.Free:
-        return 'Без итоговой отметки';
-      case DisciplineType.Mark:
-        return 'Дифференцированный зачет';
-      case DisciplineType.NoMark:
-        return 'Зачет';
-      case DisciplineType.Project:
-        return 'Курсовой проект';
-      default:
-        return '';
-    }
   };
 
   return (

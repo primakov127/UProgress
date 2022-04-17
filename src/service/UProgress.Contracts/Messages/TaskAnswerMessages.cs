@@ -23,10 +23,14 @@ public class GetTaskAnswerResult
 {
     public Guid Id { get; set; }
     public int? Mark { get; set; }
+    public string Answer { get; set; }
     public AnswerStatus Status { get; set; }
     public Guid TaskId { get; set; }
+    public string TaskName { get; set; }
     public Guid StudentId { get; set; }
     public Guid? ApprovedById { get; set; }
+    public Guid DisciplineId { get; set; }
+    public string DisciplineName { get; set; }
     public List<GetTaskAnswerResultHistory> History { get; set; }
 }
 

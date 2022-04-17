@@ -62,6 +62,7 @@ public class GetDisciplineResult
     public int? Semester { get; set; }
     public DisciplineType Type { get; set; }
     public Guid? SpecialityId { get; set; }
+    public string SpecialityShortName { get; set; }
     public IEnumerable<GetDisciplineResultTask> Tasks { get; set; }
 }
 
@@ -84,4 +85,17 @@ public class GetTaskResult
     public string Description { get; set; }
     public bool IsRequired { get; set; }
     public Guid DisciplineId { get; set; }
+    public string DisciplineName { get; set; }
+    public Guid? TaskAnswerId { get; set; }
+}
+
+public class GetMyDisciplinesResult
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public int? Semester { get; set; }
+    public DisciplineType Type { get; set; }
+    public string SpecialityShortName { get; set; }
+    public int? FinalMark { get; set; }
+    public int Progress { get; set; }
 }

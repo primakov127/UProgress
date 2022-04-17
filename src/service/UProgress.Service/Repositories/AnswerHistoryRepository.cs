@@ -13,9 +13,9 @@ public class AnswerHistoryRepository : IRepository<AnswerHistory>
         _context = context;
     }
 
-    public AnswerHistory? GetById(object id)
+    public async Task<AnswerHistory?> GetById(object id)
     {
-        return _context.AnswerHistory.Find(id);
+        return await _context.AnswerHistory.FindAsync(id);
     }
 
     public IQueryable<AnswerHistory> Get()

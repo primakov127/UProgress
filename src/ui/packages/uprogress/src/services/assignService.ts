@@ -1,3 +1,8 @@
+import {
+  GetGroupDiscipline,
+  GetGroupDisciplineResult,
+} from './../models/messages/GetGroupDiscipline';
+import { GetMyGroupDisciplinesResult } from './../models/messages/GetMyGroupDisciplines';
 import { API_URLS } from '../constants';
 import {
   AssignDisciplineToGroup,
@@ -47,7 +52,46 @@ const assignDisciplineToGroup = async (
   }
 };
 
+const getMyGroupDisciplines =
+  async (): Promise<GetMyGroupDisciplinesResult> => {
+    try {
+      const result = (
+        await getHttpClient().get(API_URLS.assign.myGroupDisciplines)
+      ).data;
+
+      return {
+        isSuccessful: true,
+        list: result,
+      };
+    } catch (e: unknown) {
+      return {
+        isSuccessful: false,
+      } as GetMyGroupDisciplinesResult;
+    }
+  };
+
+const getGroupDiscipline = async (
+  message: GetGroupDiscipline
+): Promise<GetGroupDisciplineResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(API_URLS.assign.getGroupDiscipline, message)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      ...result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetGroupDisciplineResult;
+  }
+};
+
 export const assignService = {
   assignDisciplineToStudent,
   assignDisciplineToGroup,
+  getMyGroupDisciplines,
+  getGroupDiscipline,
 };

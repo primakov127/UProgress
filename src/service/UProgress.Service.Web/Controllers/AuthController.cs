@@ -1,4 +1,5 @@
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UProgress.Contracts.Messages;
 using UProgress.Service.Interfaces;

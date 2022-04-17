@@ -1,6 +1,7 @@
 import { useLoading, UserRole, UserType } from '@ui/app-shell';
 import { Button, Form, Input, notification, Radio, Select } from 'antd';
 import axios from 'axios';
+import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
@@ -10,6 +11,7 @@ export const AddUserScene = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const { loading, loadingHandler } = useLoading();
+  const [userType, setUserType] = useState<UserType>();
 
   const handleAdd = loadingHandler(async () => {
     try {
@@ -90,7 +92,11 @@ export const AddUserScene = () => {
             },
           ]}
         >
-          <Radio.Group buttonStyle="solid" disabled={loading}>
+          <Radio.Group
+            buttonStyle="solid"
+            disabled={loading}
+            onChange={(e) => setUserType(e.target.value)}
+          >
             <Radio.Button value={UserType.Dean}>Декан</Radio.Button>
             <Radio.Button value={UserType.Teacher}>Преподаватель</Radio.Button>
             <Radio.Button defaultChecked value={UserType.Student}>
@@ -114,10 +120,20 @@ export const AddUserScene = () => {
             placeholder="Выберите роль..."
             disabled={loading}
           >
-            <Select.Option key={UserRole.Admin}>Админ</Select.Option>
-            <Select.Option key={UserRole.Teacher}>Преподаватель</Select.Option>
-            <Select.Option key={UserRole.Student}>Студент</Select.Option>
-            <Select.Option key={UserRole.GroupHead}>Староста</Select.Option>
+            {(userType === UserType.Teacher || userType === UserType.Dean) && (
+              <Select.Option key={UserRole.Admin}>Админ</Select.Option>
+            )}
+            {(userType === UserType.Teacher || userType === UserType.Dean) && (
+              <Select.Option key={UserRole.Teacher}>
+                Преподаватель
+              </Select.Option>
+            )}
+            {userType === UserType.Student && (
+              <Select.Option key={UserRole.Student}>Студент</Select.Option>
+            )}
+            {userType === UserType.Student && (
+              <Select.Option key={UserRole.GroupHead}>Староста</Select.Option>
+            )}
           </Select>
         </Form.Item>
 

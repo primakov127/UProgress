@@ -13,9 +13,9 @@ public class TaskRepository : IRepository<Task>
         _context = context;
     }
 
-    public Task? GetById(object id)
+    public async Task<Task?> GetById(object id)
     {
-        return _context.Tasks.Find(id);
+        return await _context.Tasks.FindAsync(id);
     }
 
     public IQueryable<Task> Get()

@@ -1,3 +1,5 @@
+import { SubGroupType } from '@ui/app-shell';
+
 export const COOKIES = {
   authCookie: 'uprogress-st',
 };
@@ -37,10 +39,13 @@ export const API_URLS = {
     deleteTask: 'discipline/deletetask',
     getDiscipline: 'discipline/getdiscipline',
     getTask: 'discipline/gettask',
+    myDisciplines: 'discipline/mydisciplines',
   },
   assign: {
     assignDisciplineToStudent: 'assign/assigndisciplinetostudent',
     assignDisciplineToGroup: 'assign/assigndisciplinetogroup',
+    myGroupDisciplines: 'assign/mygroupdisciplines',
+    getGroupDiscipline: 'assign/getgroupdiscipline',
   },
   taskAnswer: {
     createTaskAnswer: 'taskanswer/createtaskanswer',
@@ -72,6 +77,7 @@ export const UI_URLS = {
     view: '/group/view',
   },
   discipline: {
+    mylist: '/discipline/my',
     list: '/discipline/list',
     add: '/discipline/add',
     view: {
@@ -96,6 +102,19 @@ export const UI_URLS = {
     view: {
       template: '/taskanswer/view/:taskAnswerId',
       url: (taskAnswerId: string) => `/taskanswer/view/${taskAnswerId}`,
+    },
+  },
+  teacher: {
+    my: '/teacher/mygroupsdisciplines',
+    group: {
+      template:
+        '/teacher/group/:groupId/discipline/:disciplineId/subgroup/:subGroupType',
+      url: (
+        groupId: string,
+        disciplineId: string,
+        subGroupType: SubGroupType
+      ) =>
+        `/teacher/group/${groupId}/discipline/${disciplineId}/subgroup/${subGroupType}`,
     },
   },
 };

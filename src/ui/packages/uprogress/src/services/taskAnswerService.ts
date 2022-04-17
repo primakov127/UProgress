@@ -46,10 +46,14 @@ const getTaskAnswer = async (
       isSuccessful: true,
       id: result.id,
       mark: result.mark,
+      answer: result.answer,
       status: result.status,
       taskId: result.taskId,
+      taskName: result.taskName,
       studentId: result.studentId,
       approvedById: result.approvedById,
+      disciplineId: result.disciplineId,
+      disciplineName: result.disciplineName,
       history: result.history,
     };
   } catch (e: unknown) {
