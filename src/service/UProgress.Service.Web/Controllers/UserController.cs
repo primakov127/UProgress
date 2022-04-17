@@ -20,14 +20,16 @@ public class UserController : ControllerBase
     private readonly UserRepository _userRepository;
     private readonly UserManager<IdentityUser<Guid>> _userManager;
     private readonly IEmailService _emailService;
+    private readonly UnitOfWork _unitOfWork;
 
     public UserController(UserService userService, UserRepository userRepository,
-        UserManager<IdentityUser<Guid>> userManager, IEmailService emailService)
+        UserManager<IdentityUser<Guid>> userManager, IEmailService emailService, UnitOfWork unitOfWork)
     {
         _userService = userService;
         _userRepository = userRepository;
         _userManager = userManager;
         _emailService = emailService;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet("getcurrentuser")]
@@ -134,6 +136,56 @@ public class UserController : ControllerBase
         {
             UserId = appUserId
         });
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateUser(UpdateUser message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var user = await _userManager.FindByIdAsync(message.Id.ToString());
+        if (user == null)
+        {
+            return BadRequest(new ApiBadRequest("Такого пользователя не существует"));
+        }
+
+        var duplicatedEmailUser = await _userManager.FindByEmailAsync(message.Email);
+        if (duplicatedEmailUser != null && duplicatedEmailUser.Email != user.Email)
+        {
+            return BadRequest(new ApiBadRequest("Пользователь с таким Email уже существует"));
+        }
+
+        var duplicatedNameUser = await _userManager.FindByNameAsync(message.Username);
+        if (duplicatedNameUser != null && duplicatedNameUser.UserName != user.UserName)
+        {
+            return BadRequest(new ApiBadRequest("Пользователь с таким Username уже существует"));
+        }
+
+        var appUser = await _userRepository.GetById(message.Id);
+
+        appUser.FullName = message.FullName;
+        user.UserName = message.Username;
+        user.NormalizedUserName = message.Username.ToUpper();
+        user.Email = message.Email;
+        user.NormalizedEmail = message.Email.ToUpper();
+        user.PhoneNumber = message.Phone;
+
+        if (message.Password != null)
+        {
+            var passwordHasher = new PasswordHasher<IdentityUser>();
+            user.PasswordHash = passwordHasher.HashPassword(null, message.Password);
+        }
+
+        await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+        await _userManager.AddToRolesAsync(user, message.UserRoles);
+        await _userManager.UpdateAsync(user);
+        _userRepository.Update(appUser);
+        await _unitOfWork.SaveAsync();
+
+        return Ok();
     }
 
     [HttpPost("deactivate")]

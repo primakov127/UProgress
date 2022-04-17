@@ -1,3 +1,4 @@
+import { UpdateUser, UpdateUserResult } from './../models/messages/UpdateUser';
 import { User } from '@ui/app-shell';
 import { API_URLS } from '../constants';
 import {
@@ -68,6 +69,20 @@ const createUser = async (message: CreateUser): Promise<CreateUserResult> => {
     return {
       isSuccessful: false,
     } as CreateUserResult;
+  }
+};
+
+const updateUser = async (message: UpdateUser): Promise<UpdateUserResult> => {
+  try {
+    await getHttpClient().post(API_URLS.user.updateUser, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateUserResult;
   }
 };
 
@@ -186,4 +201,5 @@ export const userService = {
   getStudentWithoutGroupList,
   getStudentList,
   getTeacherList,
+  updateUser,
 };

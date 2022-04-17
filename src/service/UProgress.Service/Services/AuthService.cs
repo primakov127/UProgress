@@ -143,11 +143,6 @@ public class AuthService
             userClaims.AddRange(await _roleManager.GetClaimsAsync(role));
         }
 
-        // var getClaimsAsyncTasks = roles.Select(role => _roleManager.GetClaimsAsync(role));
-        // await Task.WhenAll(getClaimsAsyncTasks);
-        //
-        // getClaimsAsyncTasks.ToList().ForEach(task => userClaims.AddRange(task.Result));
-
         return userClaims;
     }
 }
