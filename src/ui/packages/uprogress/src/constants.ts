@@ -47,6 +47,8 @@ export const API_URLS = {
     assignDisciplineToGroup: 'assign/assigndisciplinetogroup',
     myGroupDisciplines: 'assign/mygroupdisciplines',
     getGroupDiscipline: 'assign/getgroupdiscipline',
+    getGroupSessionAccess: 'assign/getgroupsessionaccess',
+    changeFinalMarks: 'assign/changefinalmarks',
   },
   taskAnswer: {
     createTaskAnswer: 'taskanswer/createtaskanswer',
@@ -117,5 +119,19 @@ export const UI_URLS = {
       ) =>
         `/teacher/group/${groupId}/discipline/${disciplineId}/subgroup/${subGroupType}`,
     },
+    changeFinalMark: {
+      template:
+        '/teacher/changemark/group/:groupId/discipline/:disciplineId/subgroup/:subGroupType',
+      url: (
+        groupId: string,
+        disciplineId: string,
+        subGroupType: SubGroupType
+      ) =>
+        `/teacher/changemark/group/${groupId}/discipline/${disciplineId}/subgroup/${subGroupType}`,
+    },
+  },
+  report: {
+    groupDiscipline: '/report/groupdiscipline',
+    sessionAccess: '/report/sessionaccess',
   },
 };

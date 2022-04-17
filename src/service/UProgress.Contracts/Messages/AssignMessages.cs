@@ -42,6 +42,7 @@ public class GetGroupDisciplineResult
     public string GroupName { get; set; }
     public Guid DisciplineId { get; set; }
     public string DisciplineName { get; set; }
+    public DisciplineType DisciplineType { get; set; }
     public IEnumerable<GetGroupDisciplineStudent> Students { get; set; }
     public IEnumerable<GetGroupDisciplineTask> Tasks { get; set; }
 }
@@ -57,6 +58,7 @@ public class GetGroupDisciplineStudent
 {
     public Guid StudentId { get; set; }
     public string FullName { get; set; }
+    public int? FinalMark { get; set; }
     public IEnumerable<GetGroupDisciplineTaskAnswer> TaskAnswers { get; set; }
 }
 
@@ -66,4 +68,34 @@ public class GetGroupDisciplineTaskAnswer
     public Guid TaskAnswerId { get; set; }
     public int? Mark { get; set; }
     public AnswerStatus Status { get; set; }
+}
+
+public class GetGroupSessionAccess
+{
+    public Guid GroupId { get; set; }
+    public int Semester { get; set; }
+}
+
+public class GetGroupSessionAccessResult
+{
+    public IEnumerable<GetGroupSessionAccessStudent> Students { get; set; }
+}
+
+public class GetGroupSessionAccessStudent
+{
+    public Guid StudentId { get; set; }
+    public string FullName { get; set; }
+    public bool Access { get; set; }
+}
+
+public class ChangeFinalMarks
+{
+    public Guid DisciplineId { get; set; }
+    public IEnumerable<ChangeFinalMarksStudent> Students { get; set; }
+}
+
+public class ChangeFinalMarksStudent
+{
+    public Guid StudentId { get; set; }
+    public int? Mark { get; set; }
 }

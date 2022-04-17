@@ -1,4 +1,4 @@
-import { AnswerStatus, SubGroupType } from '@ui/app-shell';
+import { AnswerStatus, DisciplineType, SubGroupType } from '@ui/app-shell';
 import { BaseResult } from './BaseResult';
 
 export type GetGroupDiscipline = {
@@ -12,6 +12,7 @@ export type GetGroupDisciplineResult = BaseResult & {
   groupName: string;
   disciplineId: string;
   disciplineName: string;
+  disciplineType: DisciplineType;
   tasks: Array<GetGroupDisciplineTask>;
   students: Array<GetGroupDisciplineStudent>;
 };
@@ -25,6 +26,7 @@ type GetGroupDisciplineTask = {
 type GetGroupDisciplineStudent = {
   studentId: string;
   fullName: string;
+  finalMark?: number;
   taskAnswers: Array<GetGroupDisciplineTaskAnswer>;
 };
 

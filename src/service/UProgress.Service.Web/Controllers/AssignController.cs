@@ -19,10 +19,11 @@ public class AssignController : ControllerBase
     private readonly TeacherGroupDisciplineRepository _teacherGroupDisciplineRepository;
     private readonly DisciplineRepository _disciplineRepository;
     private readonly GroupRepository _groupRepository;
+    private readonly UnitOfWork _unitOfWork;
 
     public AssignController(AssignService assignService, StudentDisciplineRepository studentDisciplineRepository,
         TeacherGroupDisciplineRepository teacherGroupDisciplineRepository, UserService userService,
-        DisciplineRepository disciplineRepository, GroupRepository groupRepository)
+        DisciplineRepository disciplineRepository, GroupRepository groupRepository, UnitOfWork unitOfWork)
     {
         _assignService = assignService;
         _studentDisciplineRepository = studentDisciplineRepository;
@@ -30,6 +31,7 @@ public class AssignController : ControllerBase
         _userService = userService;
         _disciplineRepository = disciplineRepository;
         _groupRepository = groupRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpPost("assigndisciplinetostudent")]
@@ -122,6 +124,7 @@ public class AssignController : ControllerBase
         }
 
         var group = _groupRepository.Get().Include(g => g.Students).ThenInclude(s => s.StudentTaskAnswers)
+            .Include(g => g.Students).ThenInclude(s => s.StudentDisciplines)
             .FirstOrDefault(g => g.Id == message.GroupId);
         if (group == null)
         {
@@ -142,6 +145,7 @@ public class AssignController : ControllerBase
             {
                 StudentId = s.Id,
                 FullName = s.FullName,
+                FinalMark = s.StudentDisciplines.FirstOrDefault(sd => sd.DisciplineId == discipline.Id)?.Mark,
                 TaskAnswers = s.StudentTaskAnswers.Where(ta => tasks.Any(t => t.TaskId == ta.TaskId)).Select(ta =>
                     new GetGroupDisciplineTaskAnswer
                     {
@@ -158,10 +162,79 @@ public class AssignController : ControllerBase
             GroupName = group.Name,
             DisciplineId = discipline.Id,
             DisciplineName = discipline.Name,
+            DisciplineType = discipline.Type,
             Students = students,
             Tasks = tasks
         };
 
         return Ok(result);
+    }
+
+    [HttpPost("getgroupsessionaccess")]
+    public async Task<IActionResult> GetGroupSessionAccess(GetGroupSessionAccess message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var group = _groupRepository.Get().Include(g => g.Students).ThenInclude(s => s.StudentDisciplines)
+            .FirstOrDefault(g => g.Id == message.GroupId);
+        if (group == null)
+        {
+            return BadRequest();
+        }
+
+        var accessTypes = new List<DisciplineType> {DisciplineType.Mark, DisciplineType.NoMark, DisciplineType.Project};
+        var studentHasAccessIds = new List<Guid>();
+        var disciplines = _disciplineRepository.Get().Where(d =>
+                d.SpecialityId == group.SpecialityId && d.Semester == message.Semester && accessTypes.Contains(d.Type))
+            .ToList();
+
+        group.Students.ToList().ForEach(s =>
+        {
+            var sDisciplines = s.StudentDisciplines;
+            var hasAccess = disciplines.All(d => sDisciplines.FirstOrDefault(sd => sd.DisciplineId == d.Id)?.Mark >= 4);
+            if (hasAccess)
+            {
+                studentHasAccessIds.Add(s.Id);
+            }
+        });
+
+        var result = new GetGroupSessionAccessResult
+        {
+            Students = group.Students.Select(s => new GetGroupSessionAccessStudent
+            {
+                StudentId = s.Id,
+                FullName = s.FullName,
+                Access = studentHasAccessIds.Contains(s.Id)
+            })
+        };
+
+        return Ok(result);
+    }
+
+    [HttpPost("changefinalmarks")]
+    public async Task<IActionResult> ChangeFinalMarks(ChangeFinalMarks message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var studentDisciplines = _studentDisciplineRepository.Get().Where(sd =>
+                sd.DisciplineId == message.DisciplineId).ToList()
+            .Where(sd => message.Students.Any(s => s.StudentId == sd.StudentId)).ToList();
+
+        foreach (var studentDiscipline in studentDisciplines)
+        {
+            var studentMark = message.Students.FirstOrDefault(s => s.StudentId == studentDiscipline.StudentId)?.Mark;
+            studentDiscipline.Mark = studentMark ?? studentDiscipline.Mark;
+        }
+
+        studentDisciplines.ForEach(_studentDisciplineRepository.Update);
+        await _unitOfWork.SaveAsync();
+
+        return Ok();
     }
 }

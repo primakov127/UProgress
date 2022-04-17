@@ -13,6 +13,14 @@ import {
   AssignDisciplineToStudentResult,
 } from '../models/messages/AssignDisciplineToStudent';
 import { getHttpClient } from '../utils/httpUtils';
+import {
+  GetGroupSessionAccess,
+  GetGroupSessionAccessResult,
+} from '../models/messages/GetGroupSessionAccess';
+import {
+  ChangeFinalMarks,
+  ChangeFinalMarksResult,
+} from '../models/messages/ChangeFinalMarks';
 
 const assignDisciplineToStudent = async (
   message: AssignDisciplineToStudent
@@ -89,9 +97,46 @@ const getGroupDiscipline = async (
   }
 };
 
+const getGroupSessionAccess = async (
+  message: GetGroupSessionAccess
+): Promise<GetGroupSessionAccessResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(API_URLS.assign.getGroupSessionAccess, message)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      students: result.students,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetGroupSessionAccessResult;
+  }
+};
+
+const changeFinalMarks = async (
+  message: ChangeFinalMarks
+): Promise<ChangeFinalMarksResult> => {
+  try {
+    await getHttpClient().post(API_URLS.assign.changeFinalMarks, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as ChangeFinalMarksResult;
+  }
+};
+
 export const assignService = {
   assignDisciplineToStudent,
   assignDisciplineToGroup,
   getMyGroupDisciplines,
   getGroupDiscipline,
+  getGroupSessionAccess,
+  changeFinalMarks,
 };

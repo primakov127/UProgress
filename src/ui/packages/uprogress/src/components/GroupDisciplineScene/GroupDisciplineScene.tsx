@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AnswerStatus, SubGroupType, useEffectAsync } from '@ui/app-shell';
-import { Spin, Table, Tag } from 'antd';
+import {
+  AnswerStatus,
+  DisciplineType,
+  SubGroupType,
+  useEffectAsync,
+} from '@ui/app-shell';
+import { Button, Spin, Table, Tag } from 'antd';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -64,10 +69,28 @@ export const GroupDisciplineScene = () => {
     }
   };
 
+  const getFinalMarkCell = (disciplineType?: DisciplineType, mark = 0) => {
+    switch (disciplineType) {
+      case DisciplineType.Exam:
+        return <Tag color="geekblue">{mark}</Tag>;
+      case DisciplineType.Free:
+        return <Tag color="geekblue">Free</Tag>;
+      case DisciplineType.Mark:
+        return <Tag color="geekblue">{mark}</Tag>;
+      case DisciplineType.NoMark:
+        return <Tag color="geekblue">{mark > 0 ? 'Зачет' : 'Не зачет'}</Tag>;
+      case DisciplineType.Project:
+        return <Tag color="geekblue">{mark}</Tag>;
+      default:
+        return <Tag>:)</Tag>;
+    }
+  };
+
   const tableData = groupDiscipline?.students.map((s) => ({
     key: s.studentId,
     name: s.fullName,
     ...Object.fromEntries(s.taskAnswers.map((ta) => [ta.taskId, ta])),
+    finalMark: s.finalMark,
   }));
 
   const tableColumns = [
@@ -92,6 +115,13 @@ export const GroupDisciplineScene = () => {
             ),
         }))
       : []),
+    {
+      title: 'Итог',
+      dataIndex: 'finalMark',
+      key: 'finalMark',
+      render: (text: any, record: any) =>
+        getFinalMarkCell(groupDiscipline?.disciplineType, text),
+    },
   ];
 
   return isLoading ? (
@@ -108,6 +138,17 @@ export const GroupDisciplineScene = () => {
         <h1>
           Подгруппа: <i>{getSubGroupType(Number(subGroupType))}</i>
         </h1>
+      )}
+      {groupDiscipline && (
+        <Link
+          to={UI_URLS.teacher.changeFinalMark.url(
+            groupDiscipline.groupId,
+            groupDiscipline.disciplineId,
+            SubGroupType.Full
+          )}
+        >
+          <Button style={{ marginBottom: '20px' }}>Изменить итог</Button>
+        </Link>
       )}
       <Table columns={tableColumns} dataSource={tableData} bordered />
     </Container>

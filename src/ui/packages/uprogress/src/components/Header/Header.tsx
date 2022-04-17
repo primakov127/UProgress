@@ -1,5 +1,9 @@
 import { Menu } from 'antd';
-import { ContactsOutlined, ContainerOutlined } from '@ant-design/icons';
+import {
+  ContactsOutlined,
+  ContainerOutlined,
+  FileSearchOutlined,
+} from '@ant-design/icons';
 import { useRole, useUserType } from '@ui/app-shell';
 import { UserTypeIcon } from '../UserTypeIcon/UserTypeIcon';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
@@ -57,6 +61,17 @@ export const Header = () => {
           </Menu.Item>
         )}
       </Menu.SubMenu>
+
+      {isTeacher && (
+        <Menu.SubMenu key="report" title="Отчеты" icon={<FileSearchOutlined />}>
+          <Menu.Item key={UI_URLS.report.groupDiscipline}>
+            <Link to={UI_URLS.report.groupDiscipline}>Група/Дисциплина</Link>
+          </Menu.Item>
+          <Menu.Item key={UI_URLS.report.sessionAccess}>
+            <Link to={UI_URLS.report.sessionAccess}>Допуск к сессии</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
+      )}
 
       <Menu.SubMenu
         key="side"

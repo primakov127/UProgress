@@ -25,6 +25,9 @@ import { MyDisciplinesScene } from '../components/MyDisciplinesScene/MyDisciplin
 import { Home } from '../components/Home/Home';
 import { TeacherAssignScene } from '../components/TeacherAssignScene/TeacherAssignScene';
 import { GroupDisciplineScene } from '../components/GroupDisciplineScene/GroupDisciplineScene';
+import { GroupDisciplineReportScene } from '../components/GroupDisciplineReportScene/GroupDisciplineReportScene';
+import { GroupSessionAccessReportScene } from '../components/GroupSessionAccessReportScene/GroupSessionAccessReportScene';
+import { ChangeFinalMarkScene } from '../components/ChangeFinalMarkScene/ChangeFinalMarkScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -80,6 +83,19 @@ export const App = () => (
           <Route
             path={UI_URLS.teacher.group.template}
             component={GroupDisciplineScene}
+          />
+          <Route
+            path={UI_URLS.teacher.changeFinalMark.template}
+            component={ChangeFinalMarkScene}
+          />
+
+          <Route
+            path={UI_URLS.report.groupDiscipline}
+            component={GroupDisciplineReportScene}
+          />
+          <Route
+            path={UI_URLS.report.sessionAccess}
+            component={GroupSessionAccessReportScene}
           />
         </Switch>
       </MainContainer>
