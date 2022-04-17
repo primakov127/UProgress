@@ -104,7 +104,7 @@ export const AddGroupScene = () => {
 
   return (
     <Container>
-      <Form form={form} onSubmitCapture={handleAdd}>
+      <Form form={form} onSubmitCapture={handleAdd} labelCol={{ span: 3 }}>
         <Form.Item
           name="years"
           label="Период обучения"
@@ -252,14 +252,24 @@ export const AddGroupScene = () => {
           />
         </Form.Item>
 
-        <Button block type="primary" htmlType="submit" loading={loading}>
-          Создать
-        </Button>
-        <Link to={UI_URLS.group.list}>
-          <Button type="primary" danger>
-            Вернуться к списку
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <Link
+            style={{ marginLeft: 'auto', display: 'block' }}
+            to={UI_URLS.group.list}
+          >
+            <Button type="primary" danger>
+              Вернуться к списку
+            </Button>
+          </Link>
+          <Button
+            style={{ marginLeft: '5px' }}
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+          >
+            Создать
           </Button>
-        </Link>
+        </div>
       </Form>
     </Container>
   );

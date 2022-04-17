@@ -39,7 +39,7 @@ export const AddUserScene = () => {
 
   return (
     <Container>
-      <Form form={form} onSubmitCapture={handleAdd}>
+      <Form form={form} onSubmitCapture={handleAdd} labelCol={{ span: 2 }}>
         <Form.Item
           name="fullName"
           label="ФИО"
@@ -137,14 +137,23 @@ export const AddUserScene = () => {
           </Select>
         </Form.Item>
 
-        <Button block type="primary" htmlType="submit" loading={loading}>
-          Создать
-        </Button>
-        <Link to={UI_URLS.user.list}>
-          <Button type="primary" danger>
-            Вернуться к списку
+        <div
+          style={{ display: 'flex', justifyContent: 'end', paddingTop: '20px' }}
+        >
+          <Link to={UI_URLS.user.list}>
+            <Button type="primary" danger>
+              Вернуться к списку
+            </Button>
+          </Link>
+          <Button
+            style={{ marginLeft: '5px' }}
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+          >
+            Создать
           </Button>
-        </Link>
+        </div>
       </Form>
     </Container>
   );

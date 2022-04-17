@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DisciplineType, Speciality, useEffectAsync, useLoading } from '@ui/app-shell';
+import {
+  DisciplineType,
+  Speciality,
+  useEffectAsync,
+  useLoading,
+} from '@ui/app-shell';
 import {
   Button,
   Card,
@@ -63,7 +68,7 @@ export const AddDisciplineScene = () => {
 
   return (
     <Container>
-      <Form form={form} onSubmitCapture={handleAdd}>
+      <Form form={form} onSubmitCapture={handleAdd} labelCol={{ span: 2 }}>
         <Form.Item
           name="name"
           label="Название"
@@ -170,14 +175,23 @@ export const AddDisciplineScene = () => {
           </MarkdownContainer>
         </Card>
 
-        <Button block type="primary" htmlType="submit" loading={loading}>
-          Создать
-        </Button>
-        <Link to={UI_URLS.discipline.list}>
-          <Button type="primary" danger>
-            Вернуться к списку
+        <div
+          style={{ display: 'flex', justifyContent: 'end', paddingTop: '20px' }}
+        >
+          <Link to={UI_URLS.discipline.list}>
+            <Button type="primary" danger>
+              Вернуться к списку
+            </Button>
+          </Link>
+          <Button
+            style={{ marginLeft: '5px' }}
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+          >
+            Создать
           </Button>
-        </Link>
+        </div>
       </Form>
     </Container>
   );

@@ -99,10 +99,16 @@ export const DisciplineListScene = () => {
               Добавить дисциплину
             </Button>
           </Link>
-          <Button onClick={() => setIsAssignToStudentVisible(true)}>
+          <Button
+            style={{ marginLeft: '10px' }}
+            onClick={() => setIsAssignToStudentVisible(true)}
+          >
             Назначить студенту
           </Button>
-          <Button onClick={() => setIsAssignToGroupVisible(true)}>
+          <Button
+            style={{ marginLeft: '10px' }}
+            onClick={() => setIsAssignToGroupVisible(true)}
+          >
             Назначить группе
           </Button>
           <List
