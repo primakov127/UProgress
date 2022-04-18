@@ -33,6 +33,8 @@ export const AddUserScene = () => {
     } catch (e: unknown) {
       if (!axios.isAxiosError(e)) {
         notification.error({ message: 'Проверьте форму' });
+      } else {
+        history.push(UI_URLS.user.list);
       }
     }
   });

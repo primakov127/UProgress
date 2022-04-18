@@ -28,6 +28,7 @@ import { GroupDisciplineScene } from '../components/GroupDisciplineScene/GroupDi
 import { GroupDisciplineReportScene } from '../components/GroupDisciplineReportScene/GroupDisciplineReportScene';
 import { GroupSessionAccessReportScene } from '../components/GroupSessionAccessReportScene/GroupSessionAccessReportScene';
 import { ChangeFinalMarkScene } from '../components/ChangeFinalMarkScene/ChangeFinalMarkScene';
+import { ViewGroupScene } from '../components/ViewGroupScene/ViewGroupScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -47,6 +48,10 @@ export const App = () => (
 
           <Route path={UI_URLS.group.list} component={GroupListScene} />
           <Route path={UI_URLS.group.add} component={AddGroupScene} />
+          <Route
+            path={UI_URLS.group.view.template}
+            component={ViewGroupScene}
+          />
 
           <Route
             path={UI_URLS.discipline.list}

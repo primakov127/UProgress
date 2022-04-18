@@ -31,6 +31,10 @@ export const API_URLS = {
     getGroupList: 'group/getgrouplist',
     deleteGroup: 'group/delete',
     getSpecialityList: 'group/getspecialitylist',
+    getGroup: 'group/getgroup',
+    updateGroup: 'group/updategroup',
+    removeGroupStudent: 'group/removegroupstudent',
+    addGroupStudent: 'group/addgroupstudent',
   },
   discipline: {
     createDiscipline: 'discipline/create',
@@ -77,7 +81,10 @@ export const UI_URLS = {
   group: {
     list: '/group/list',
     add: '/group/add',
-    view: '/group/view',
+    view: {
+      template: '/group/view/:groupId',
+      url: (groupId: string) => `/group/view/${groupId}`,
+    },
   },
   discipline: {
     mylist: '/discipline/my',

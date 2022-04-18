@@ -1,3 +1,4 @@
+import { GetGroup, GetGroupResult } from './../models/messages/GetGroup';
 import {
   CreateGroup,
   CreateGroupResult,
@@ -7,6 +8,9 @@ import { GetGroupListResult } from '../models/messages/GetGroupList';
 import { getHttpClient } from '../utils/httpUtils';
 import { DeleteGroup, DeleteGroupResult } from '../models/messages/DeleteGroup';
 import { GetSpecialityListResult } from '../models/messages/GetSpecialityList';
+import { UpdateGroup, UpdateGroupResult } from '../models/messages/UpdateGroup';
+import { BaseResult } from '../models/messages/BaseResult';
+import { SubGroupType } from '@ui/app-shell';
 
 const getGroupList = async (): Promise<GetGroupListResult> => {
   try {
@@ -75,9 +79,81 @@ const getSpecialityList = async (): Promise<GetSpecialityListResult> => {
   }
 };
 
+const getGroup = async (message: GetGroup): Promise<GetGroupResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(API_URLS.group.getGroup, message)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      ...result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetGroupResult;
+  }
+};
+
+const updateGroup = async (
+  message: UpdateGroup
+): Promise<UpdateGroupResult> => {
+  try {
+    await getHttpClient().post(API_URLS.group.updateGroup, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateGroupResult;
+  }
+};
+
+const addGroupStudent = async (message: {
+  groupId: string;
+  studentId: string;
+  subGroupType: SubGroupType;
+}): Promise<BaseResult> => {
+  try {
+    await getHttpClient().post(API_URLS.group.addGroupStudent, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateGroupResult;
+  }
+};
+
+const removeGroupStudent = async (message: {
+  groupId: string;
+  studentId: string;
+}): Promise<BaseResult> => {
+  try {
+    await getHttpClient().post(API_URLS.group.removeGroupStudent, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateGroupResult;
+  }
+};
+
 export const groupService = {
   getGroupList,
   createGroup,
   deleteGroup,
   getSpecialityList,
+  getGroup,
+  updateGroup,
+  addGroupStudent,
+  removeGroupStudent,
 };

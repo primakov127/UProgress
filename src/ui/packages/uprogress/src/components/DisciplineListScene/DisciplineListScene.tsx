@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DisciplineType, useEffectAsync } from '@ui/app-shell';
+import { useEffectAsync } from '@ui/app-shell';
 import { Button, Drawer, Empty, List, Modal, notification, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import { useEffectAsync } from '@ui/app-shell';
+import { useEffectAsync, useRole } from '@ui/app-shell';
 import { Button, Empty, List, Modal, notification } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import { groupService } from '../../services/groupService';
 
 export const GroupListScene = () => {
   const [groups, setGroups] = useState<GroupListItem[]>();
+  const { isAdmin } = useRole();
 
   useEffectAsync(async () => {
     const result = await groupService.getGroupList();
@@ -52,19 +53,21 @@ export const GroupListScene = () => {
             renderItem={(g) => (
               <List.Item
                 actions={[
-                  <Link to={`${UI_URLS.group.view}/${g.id}`}>
+                  <Link to={UI_URLS.group.view.url(g.id)}>
                     <EditOutlined />
                   </Link>,
-                  <Button
-                    type="text"
-                    icon={<DeleteOutlined />}
-                    onClick={() => showDeleteConfirm(g.id, g.name)}
-                  />,
+                  isAdmin && (
+                    <Button
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      onClick={() => showDeleteConfirm(g.id, g.name)}
+                    />
+                  ),
                 ]}
               >
                 <List.Item.Meta
                   title={
-                    <Link to={`${UI_URLS.group.view}/${g.id}`}>{g.name}</Link>
+                    <Link to={UI_URLS.group.view.url(g.id)}>{g.name}</Link>
                   }
                   description={
                     <p>

@@ -239,11 +239,13 @@ export const ViewTaskAnswerScene = () => {
             </ReactMarkdown>
           </MarkdownContainer>
         </Card>
-        {isTeacher && taskAnswer.status !== AnswerStatus.Approved && (
+        {isTeacher && (
           <Form form={teacherForm} layout="inline">
-            <Form.Item name="comment" label="Комментарий" style={{ flex: 1 }}>
-              <Input placeholder="Молодец. Все правильно!" />
-            </Form.Item>
+            {taskAnswer.status !== AnswerStatus.Approved && (
+              <Form.Item name="comment" label="Комментарий" style={{ flex: 1 }}>
+                <Input placeholder="Молодец. Все правильно!" />
+              </Form.Item>
+            )}
 
             <Form.Item
               name="mark"
@@ -261,7 +263,9 @@ export const ViewTaskAnswerScene = () => {
             </Form.Item>
 
             <Button className="btn_a" type="primary" onClick={handleApprove}>
-              Одобрить
+              {taskAnswer.status !== AnswerStatus.Approved
+                ? 'Одобрить'
+                : 'Изменить'}
             </Button>
             {taskAnswer.status !== AnswerStatus.Rejected && (
               <Button
