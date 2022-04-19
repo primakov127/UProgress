@@ -31,6 +31,7 @@ import { ChangeFinalMarkScene } from '../components/ChangeFinalMarkScene/ChangeF
 import { ViewGroupScene } from '../components/ViewGroupScene/ViewGroupScene';
 import { Profile } from '../components/Profile/Profile';
 import { StudentsReportScene } from '../components/StudentsReportScene/StudentsReportScene';
+import { MyProgress } from '../components/MyProgress/MyProgress';
 
 export const App = () => (
   <RecoilRoot>
@@ -40,6 +41,7 @@ export const App = () => (
         <Switch>
           <Route exact path={UI_URLS.home} component={Home} />
           <Route exact path={UI_URLS.profile} component={Profile} />
+          <Route exact path={UI_URLS.myProgress} component={MyProgress} />
 
           <Route path={UI_URLS.auth.login} component={LoginScene} />
           <Route path={UI_URLS.auth.forgotPassword} component={ForgotScene} />

@@ -67,6 +67,7 @@ export const API_URLS = {
 export const UI_URLS = {
   home: '/',
   profile: '/myprofile',
+  myProgress: '/myprogress',
   auth: {
     login: '/auth/login',
     forgotPassword: '/auth/forgotpassword',

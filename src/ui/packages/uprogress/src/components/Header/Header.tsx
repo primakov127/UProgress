@@ -84,6 +84,11 @@ export const Header = () => {
         <Menu.Item key={UI_URLS.profile}>
           <Link to={UI_URLS.profile}>Профиль</Link>
         </Menu.Item>
+        {isStudent && (
+          <Menu.Item key={UI_URLS.myProgress}>
+            <Link to={UI_URLS.myProgress}>Моя статистика</Link>
+          </Menu.Item>
+        )}
         <Menu.Item key="logout" onClick={handleLogout}>
           Выйти
         </Menu.Item>
