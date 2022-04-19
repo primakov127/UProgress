@@ -138,7 +138,7 @@ export const ViewGroupScene = () => {
           rules={[{ required: true, message: 'Выберите период' }]}
         >
           <DatePicker.RangePicker
-            disabled={loading}
+            disabled={loading || !isAdmin}
             picker="year"
             placeholder={['Начало', 'Окончание']}
           />
@@ -156,7 +156,7 @@ export const ViewGroupScene = () => {
             },
           ]}
         >
-          <InputNumber disabled={loading} />
+          <InputNumber disabled={loading || !isAdmin} />
         </Form.Item>
 
         <Form.Item
@@ -170,7 +170,7 @@ export const ViewGroupScene = () => {
           ]}
         >
           <Select
-            disabled={loading}
+            disabled={loading || !isAdmin}
             showSearch
             placeholder="Выберите старосту"
             optionFilterProp="children"
@@ -209,24 +209,26 @@ export const ViewGroupScene = () => {
           </Select>
         </Form.Item>
 
-        <div style={{ display: 'flex', justifyContent: 'end' }}>
-          <Link
-            style={{ marginLeft: 'auto', display: 'block' }}
-            to={UI_URLS.group.list}
-          >
-            <Button type="primary" danger>
-              Вернуться к списку
+        {isAdmin && (
+          <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <Link
+              style={{ marginLeft: 'auto', display: 'block' }}
+              to={UI_URLS.group.list}
+            >
+              <Button type="primary" danger>
+                Вернуться к списку
+              </Button>
+            </Link>
+            <Button
+              style={{ marginLeft: '5px' }}
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+            >
+              Изменить
             </Button>
-          </Link>
-          <Button
-            style={{ marginLeft: '5px' }}
-            type="primary"
-            htmlType="submit"
-            loading={loading}
-          >
-            Изменить
-          </Button>
-        </div>
+          </div>
+        )}
       </Form>
       <div className="list-container">
         <List
@@ -288,64 +290,66 @@ export const ViewGroupScene = () => {
           )}
         />
       </div>
-      <Form form={addStudentForm} layout="inline">
-        <Form.Item
-          name="studentId"
-          label="Студент"
-          rules={[
-            {
-              required: true,
-              message: 'Выберите студента',
-            },
-          ]}
-        >
-          <Select
-            disabled={loading}
-            showSearch
-            placeholder="Выберите студента"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option as any).children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
-            filterSort={(optionA, optionB) =>
-              (optionA as any).children
-                .toLowerCase()
-                .localeCompare((optionB as any).children.toLowerCase())
-            }
+      {isAdmin && (
+        <Form form={addStudentForm} layout="inline">
+          <Form.Item
+            name="studentId"
+            label="Студент"
+            rules={[
+              {
+                required: true,
+                message: 'Выберите студента',
+              },
+            ]}
           >
-            {students?.map((s) => (
-              <Select.Option key={s.id}>{s.fullName}</Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+            <Select
+              disabled={loading}
+              showSearch
+              placeholder="Выберите студента"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option as any).children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA as any).children
+                  .toLowerCase()
+                  .localeCompare((optionB as any).children.toLowerCase())
+              }
+            >
+              {students?.map((s) => (
+                <Select.Option key={s.id}>{s.fullName}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <Form.Item
-          name="subGroupType"
-          label="Подгруппа"
-          rules={[
-            {
-              required: true,
-              message: 'Выберите подгруппу',
-            },
-          ]}
-        >
-          <Select disabled={loading} placeholder="Выберите подгруппу">
-            <Select.Option key={SubGroupType.First}>Первая</Select.Option>
-            <Select.Option key={SubGroupType.Second}>Вторая</Select.Option>
-          </Select>
-        </Form.Item>
+          <Form.Item
+            name="subGroupType"
+            label="Подгруппа"
+            rules={[
+              {
+                required: true,
+                message: 'Выберите подгруппу',
+              },
+            ]}
+          >
+            <Select disabled={loading} placeholder="Выберите подгруппу">
+              <Select.Option key={SubGroupType.First}>Первая</Select.Option>
+              <Select.Option key={SubGroupType.Second}>Вторая</Select.Option>
+            </Select>
+          </Form.Item>
 
-        <Button
-          loading={loading}
-          className="btn_a"
-          type="primary"
-          onClick={handleAddStudent}
-        >
-          Добавить
-        </Button>
-      </Form>
+          <Button
+            loading={loading}
+            className="btn_a"
+            type="primary"
+            onClick={handleAddStudent}
+          >
+            Добавить
+          </Button>
+        </Form>
+      )}
     </Container>
   ) : null;
 };

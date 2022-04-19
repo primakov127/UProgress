@@ -99,3 +99,23 @@ public class ChangeFinalMarksStudent
     public Guid StudentId { get; set; }
     public int? Mark { get; set; }
 }
+
+public class SelectStudents
+{
+    public Guid DisciplineId { get; set; }
+    public string Operator { get; set; }
+    public int Mark { get; set; }
+}
+
+public class SelectStudentsResult
+{
+    public IEnumerable<SelectStudentsResultStudent> Students { get; set; }
+}
+
+public class SelectStudentsResultStudent
+{
+    public Guid StudentId { get; set; }
+    public string StudentName { get; set; }
+    public Guid GroupId { get; set; }
+    public string GroupName { get; set; }
+}

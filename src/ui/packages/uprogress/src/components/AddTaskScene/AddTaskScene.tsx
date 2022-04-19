@@ -84,14 +84,26 @@ export const AddTaskScene = () => {
           </MarkdownContainer>
         </Card>
 
-        <Button block type="primary" htmlType="submit" loading={loading}>
-          Создать
-        </Button>
-        <Link to={UI_URLS.discipline.view.url(disciplineId)}>
-          <Button type="primary" danger>
-            Вернуться к дисциплине
+        <div
+          style={{ display: 'flex', justifyContent: 'end', marginTop: '20px' }}
+        >
+          <Link
+            style={{ marginLeft: 'auto', display: 'block' }}
+            to={UI_URLS.discipline.view.url(disciplineId)}
+          >
+            <Button type="primary" danger>
+              Вернуться к дисциплине
+            </Button>
+          </Link>
+          <Button
+            style={{ marginLeft: '5px' }}
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+          >
+            Создать
           </Button>
-        </Link>
+        </div>
       </Form>
     </Container>
   );

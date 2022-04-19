@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffectAsync } from '@ui/app-shell';
-import { Button, Drawer, Empty, List, Modal, notification, Tag } from 'antd';
+import { useEffectAsync, useRole } from '@ui/app-shell';
+import {
+  Button,
+  Drawer,
+  Empty,
+  Input,
+  List,
+  Modal,
+  notification,
+  Tag,
+} from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -24,6 +33,8 @@ export const DisciplineListScene = () => {
   const [students, setStudents] = useState<StudentListItem[]>([]);
   const [groups, setGroups] = useState<GroupListItem[]>([]);
   const [teachers, setTeachers] = useState<StudentListItem[]>([]);
+  const { isAdmin } = useRole();
+  const [search, setSearch] = useState('');
 
   useEffectAsync(async () => {
     const result = await disciplineService.getDisciplineList();
@@ -94,38 +105,58 @@ export const DisciplineListScene = () => {
               cb={() => setIsAssignToGroupVisible(false)}
             />
           </Drawer>
-          <Link to={UI_URLS.discipline.add}>
-            <Button type="dashed" icon={<PlusOutlined />}>
-              Добавить дисциплину
-            </Button>
-          </Link>
-          <Button
-            style={{ marginLeft: '10px' }}
-            onClick={() => setIsAssignToStudentVisible(true)}
-          >
-            Назначить студенту
-          </Button>
-          <Button
-            style={{ marginLeft: '10px' }}
-            onClick={() => setIsAssignToGroupVisible(true)}
-          >
-            Назначить группе
-          </Button>
+          <div className="conrtols-container">
+            <Input
+              placeholder="Название"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {isAdmin && (
+              <Link to={UI_URLS.discipline.add}>
+                <Button type="dashed" icon={<PlusOutlined />}>
+                  Добавить дисциплину
+                </Button>
+              </Link>
+            )}
+            {isAdmin && (
+              <Button
+                style={{ marginLeft: '10px' }}
+                onClick={() => setIsAssignToStudentVisible(true)}
+              >
+                Назначить студенту
+              </Button>
+            )}
+            {isAdmin && (
+              <Button
+                style={{ marginLeft: '10px' }}
+                onClick={() => setIsAssignToGroupVisible(true)}
+              >
+                Назначить группе
+              </Button>
+            )}
+          </div>
           <List
             size="large"
             itemLayout="horizontal"
-            dataSource={disciplines}
+            dataSource={disciplines.filter(
+              (d) =>
+                !search || d.name.toLowerCase().includes(search.toLowerCase())
+            )}
             renderItem={(d) => (
               <List.Item
                 actions={[
-                  <Link to={UI_URLS.discipline.view.url(d.id)}>
-                    <EditOutlined />
-                  </Link>,
-                  <Button
-                    type="text"
-                    icon={<DeleteOutlined />}
-                    onClick={() => showDeleteConfirm(d.id, d.name)}
-                  />,
+                  isAdmin && (
+                    <Link to={UI_URLS.discipline.view.url(d.id)}>
+                      <EditOutlined />
+                    </Link>
+                  ),
+                  isAdmin && (
+                    <Button
+                      type="text"
+                      icon={<DeleteOutlined />}
+                      onClick={() => showDeleteConfirm(d.id, d.name)}
+                    />
+                  ),
                 ]}
               >
                 <List.Item.Meta
@@ -151,4 +182,26 @@ export const DisciplineListScene = () => {
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  .conrtols-container {
+    display: flex;
+    padding-bottom: 20px;
+
+    .ant-select {
+      width: 300px;
+      margin-left: 10px;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      margin-left: 10px;
+    }
+
+    a {
+      margin-left: auto;
+    }
+  }
+`;

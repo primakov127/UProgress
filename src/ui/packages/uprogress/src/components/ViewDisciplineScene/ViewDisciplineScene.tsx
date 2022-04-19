@@ -36,7 +36,6 @@ import { getType } from '../../utils/stringUtils';
 
 export const ViewDisciplineScene = () => {
   const [form] = Form.useForm();
-  const history = useHistory();
   const { disciplineId } = useParams<{ disciplineId: string }>();
   const [discipline, setDiscipline] = useState<Discipline>();
   const [specialities, setSpecialities] = useState<Speciality[]>();
@@ -99,6 +98,7 @@ export const ViewDisciplineScene = () => {
             type: discipline?.type,
             description: discipline?.description,
           }}
+          labelCol={{ span: 3 }}
         >
           <Form.Item
             name="name"
@@ -199,14 +199,24 @@ export const ViewDisciplineScene = () => {
             />
           </Form.Item>
 
-          <Button block type="primary" htmlType="submit" loading={loading}>
-            Создать
-          </Button>
-          <Link to={UI_URLS.discipline.list}>
-            <Button type="primary" danger>
-              Вернуться к списку
+          <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <Link
+              to={UI_URLS.discipline.list}
+              style={{ marginLeft: 'auto', display: 'block' }}
+            >
+              <Button type="primary" danger>
+                Вернуться к списку
+              </Button>
+            </Link>
+            <Button
+              style={{ marginLeft: '5px' }}
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+            >
+              Создать
             </Button>
-          </Link>
+          </div>
         </Form>
       )}
       {!isAdmin && (

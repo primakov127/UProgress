@@ -267,16 +267,17 @@ export const ViewTaskAnswerScene = () => {
                 ? 'Одобрить'
                 : 'Изменить'}
             </Button>
-            {taskAnswer.status !== AnswerStatus.Rejected && (
-              <Button
-                className="btn_a"
-                type="primary"
-                danger
-                onClick={handleReject}
-              >
-                Отклонить
-              </Button>
-            )}
+            {taskAnswer.status !== AnswerStatus.Rejected &&
+              taskAnswer.status !== AnswerStatus.Approved && (
+                <Button
+                  className="btn_a"
+                  type="primary"
+                  danger
+                  onClick={handleReject}
+                >
+                  Отклонить
+                </Button>
+              )}
           </Form>
         )}
       </FormContainer>

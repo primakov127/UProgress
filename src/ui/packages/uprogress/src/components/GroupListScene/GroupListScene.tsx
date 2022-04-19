@@ -1,5 +1,5 @@
 import { useEffectAsync, useRole } from '@ui/app-shell';
-import { Button, Empty, List, Modal, notification } from 'antd';
+import { Button, Empty, Input, List, Modal, notification } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { groupService } from '../../services/groupService';
 export const GroupListScene = () => {
   const [groups, setGroups] = useState<GroupListItem[]>();
   const { isAdmin } = useRole();
+  const [search, setSearch] = useState('');
 
   useEffectAsync(async () => {
     const result = await groupService.getGroupList();
@@ -41,21 +42,35 @@ export const GroupListScene = () => {
     <div>
       {groups ? (
         <Container>
-          <Link to={UI_URLS.group.add}>
-            <Button type="dashed" icon={<PlusOutlined />}>
-              Добавить группу
-            </Button>
-          </Link>
+          <div className="conrtols-container">
+            <Input
+              placeholder="Название"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {isAdmin && (
+              <Link to={UI_URLS.group.add}>
+                <Button type="dashed" icon={<PlusOutlined />}>
+                  Добавить группу
+                </Button>
+              </Link>
+            )}
+          </div>
           <List
             size="large"
             itemLayout="horizontal"
-            dataSource={groups}
+            dataSource={groups.filter(
+              (g) =>
+                !search || g.name.toLowerCase().includes(search.toLowerCase())
+            )}
             renderItem={(g) => (
               <List.Item
                 actions={[
-                  <Link to={UI_URLS.group.view.url(g.id)}>
-                    <EditOutlined />
-                  </Link>,
+                  isAdmin && (
+                    <Link to={UI_URLS.group.view.url(g.id)}>
+                      <EditOutlined />
+                    </Link>
+                  ),
                   isAdmin && (
                     <Button
                       type="text"
@@ -89,4 +104,26 @@ export const GroupListScene = () => {
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  .conrtols-container {
+    display: flex;
+    padding-bottom: 20px;
+
+    .ant-select {
+      width: 300px;
+      margin-left: 10px;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      margin-left: 10px;
+    }
+
+    a {
+      margin-left: auto;
+    }
+  }
+`;

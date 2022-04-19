@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -236,5 +237,45 @@ public class AssignController : ControllerBase
         await _unitOfWork.SaveAsync();
 
         return Ok();
+    }
+
+    [HttpPost("selectstudents")]
+    public async Task<IActionResult> SelectStudents(SelectStudents message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        Expression<Func<StudentDiscipline, bool>> greater = sd =>
+            sd.DisciplineId == message.DisciplineId && sd.Mark > message.Mark;
+        Expression<Func<StudentDiscipline, bool>> less = sd =>
+            sd.DisciplineId == message.DisciplineId && sd.Mark < message.Mark;
+        Expression<Func<StudentDiscipline, bool>> equal = sd =>
+            sd.DisciplineId == message.DisciplineId && sd.Mark == message.Mark;
+
+        var predicate = message.Operator switch
+        {
+            "БОЛЬШЕ" => greater,
+            "МЕНЬШЕ" => less,
+            "РАВНО" => equal,
+            _ => greater
+        };
+
+        var studentsDisciplines = _studentDisciplineRepository.Get().Include(sd => sd.Student).ThenInclude(s => s.Group)
+            .Where(predicate);
+
+        var result = new SelectStudentsResult
+        {
+            Students = studentsDisciplines.Select(sd => new SelectStudentsResultStudent
+            {
+                StudentId = sd.Student.Id,
+                StudentName = sd.Student.FullName,
+                GroupId = sd.Student.Group.Id,
+                GroupName = sd.Student.Group.Name
+            })
+        };
+
+        return Ok(result);
     }
 }

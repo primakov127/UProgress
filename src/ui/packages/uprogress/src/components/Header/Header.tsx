@@ -70,6 +70,9 @@ export const Header = () => {
           <Menu.Item key={UI_URLS.report.sessionAccess}>
             <Link to={UI_URLS.report.sessionAccess}>Допуск к сессии</Link>
           </Menu.Item>
+          <Menu.Item key={UI_URLS.report.students}>
+            <Link to={UI_URLS.report.students}>Выборка студентов</Link>
+          </Menu.Item>
         </Menu.SubMenu>
       )}
 
@@ -78,6 +81,9 @@ export const Header = () => {
         style={{ marginLeft: 'auto' }}
         title={<UserTypeIcon userType={userType} noTooltip />}
       >
+        <Menu.Item key={UI_URLS.profile}>
+          <Link to={UI_URLS.profile}>Профиль</Link>
+        </Menu.Item>
         <Menu.Item key="logout" onClick={handleLogout}>
           Выйти
         </Menu.Item>

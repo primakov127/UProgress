@@ -84,13 +84,15 @@ export const ViewUserScene = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            name="username"
-            label="Username"
-            rules={[{ required: true, message: 'Введите Username' }]}
-          >
-            <Input disabled={loading || !isAdmin} placeholder="user12345" />
-          </Form.Item>
+          {isAdmin && (
+            <Form.Item
+              name="username"
+              label="Username"
+              rules={[{ required: true, message: 'Введите Username' }]}
+            >
+              <Input disabled={loading || !isAdmin} placeholder="user12345" />
+            </Form.Item>
+          )}
 
           <Form.Item name="phone" label="Номер телефона">
             <Input disabled={loading || !isAdmin} placeholder="+375447843293" />
@@ -113,13 +115,15 @@ export const ViewUserScene = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            name="password"
-            label="Пароль"
-            rules={[{ min: 3, message: 'Минимальная длина 3' }]}
-          >
-            <Input disabled={loading || !isAdmin} placeholder="pa$$w0rD" />
-          </Form.Item>
+          {isAdmin && (
+            <Form.Item
+              name="password"
+              label="Пароль"
+              rules={[{ min: 3, message: 'Минимальная длина 3' }]}
+            >
+              <Input disabled={loading || !isAdmin} placeholder="pa$$w0rD" />
+            </Form.Item>
+          )}
 
           <Form.Item
             name="userType"
@@ -146,39 +150,43 @@ export const ViewUserScene = () => {
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item
-            name="roles"
-            label="Роли"
-            rules={[
-              {
-                required: true,
-                message: 'Выберите хотя бы одну роль',
-              },
-            ]}
-          >
-            <Select
-              mode="multiple"
-              placeholder="Выберите роль..."
-              disabled={loading || !isAdmin}
+          {isAdmin && (
+            <Form.Item
+              name="roles"
+              label="Роли"
+              rules={[
+                {
+                  required: true,
+                  message: 'Выберите хотя бы одну роль',
+                },
+              ]}
             >
-              {(userType === UserType.Teacher ||
-                userType === UserType.Dean) && (
-                <Select.Option key={UserRole.Admin}>Админ</Select.Option>
-              )}
-              {(userType === UserType.Teacher ||
-                userType === UserType.Dean) && (
-                <Select.Option key={UserRole.Teacher}>
-                  Преподаватель
-                </Select.Option>
-              )}
-              {userType === UserType.Student && (
-                <Select.Option key={UserRole.Student}>Студент</Select.Option>
-              )}
-              {userType === UserType.Student && (
-                <Select.Option key={UserRole.GroupHead}>Староста</Select.Option>
-              )}
-            </Select>
-          </Form.Item>
+              <Select
+                mode="multiple"
+                placeholder="Выберите роль..."
+                disabled={loading || !isAdmin}
+              >
+                {(userType === UserType.Teacher ||
+                  userType === UserType.Dean) && (
+                  <Select.Option key={UserRole.Admin}>Админ</Select.Option>
+                )}
+                {(userType === UserType.Teacher ||
+                  userType === UserType.Dean) && (
+                  <Select.Option key={UserRole.Teacher}>
+                    Преподаватель
+                  </Select.Option>
+                )}
+                {userType === UserType.Student && (
+                  <Select.Option key={UserRole.Student}>Студент</Select.Option>
+                )}
+                {userType === UserType.Student && (
+                  <Select.Option key={UserRole.GroupHead}>
+                    Староста
+                  </Select.Option>
+                )}
+              </Select>
+            </Form.Item>
+          )}
 
           {isAdmin && (
             <div

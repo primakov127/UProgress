@@ -104,7 +104,7 @@ export const GroupDisciplineScene = () => {
     },
     ...(groupDiscipline
       ? groupDiscipline.tasks.map((gd) => ({
-          title: gd.name,
+          title: gd.name + (gd.isRequired ? ' (Обязательно)' : ''),
           dataIndex: gd.taskId,
           key: gd.taskId,
           render: (object: any) =>

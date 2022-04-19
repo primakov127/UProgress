@@ -21,6 +21,10 @@ import {
   ChangeFinalMarks,
   ChangeFinalMarksResult,
 } from '../models/messages/ChangeFinalMarks';
+import {
+  SelectStudents,
+  SelectStudentsResult,
+} from '../models/messages/SelectStudents';
 
 const assignDisciplineToStudent = async (
   message: AssignDisciplineToStudent
@@ -132,6 +136,25 @@ const changeFinalMarks = async (
   }
 };
 
+const selectSudents = async (
+  message: SelectStudents
+): Promise<SelectStudentsResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(API_URLS.assign.selectStudents, message)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      students: result.students,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as SelectStudentsResult;
+  }
+};
+
 export const assignService = {
   assignDisciplineToStudent,
   assignDisciplineToGroup,
@@ -139,4 +162,5 @@ export const assignService = {
   getGroupDiscipline,
   getGroupSessionAccess,
   changeFinalMarks,
+  selectSudents,
 };

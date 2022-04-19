@@ -53,6 +53,7 @@ export const API_URLS = {
     getGroupDiscipline: 'assign/getgroupdiscipline',
     getGroupSessionAccess: 'assign/getgroupsessionaccess',
     changeFinalMarks: 'assign/changefinalmarks',
+    selectStudents: 'assign/selectstudents',
   },
   taskAnswer: {
     createTaskAnswer: 'taskanswer/createtaskanswer',
@@ -65,6 +66,7 @@ export const API_URLS = {
 
 export const UI_URLS = {
   home: '/',
+  profile: '/myprofile',
   auth: {
     login: '/auth/login',
     forgotPassword: '/auth/forgotpassword',
@@ -140,5 +142,6 @@ export const UI_URLS = {
   report: {
     groupDiscipline: '/report/groupdiscipline',
     sessionAccess: '/report/sessionaccess',
+    students: '/report/students',
   },
 };

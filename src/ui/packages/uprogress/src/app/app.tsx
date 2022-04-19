@@ -29,6 +29,8 @@ import { GroupDisciplineReportScene } from '../components/GroupDisciplineReportS
 import { GroupSessionAccessReportScene } from '../components/GroupSessionAccessReportScene/GroupSessionAccessReportScene';
 import { ChangeFinalMarkScene } from '../components/ChangeFinalMarkScene/ChangeFinalMarkScene';
 import { ViewGroupScene } from '../components/ViewGroupScene/ViewGroupScene';
+import { Profile } from '../components/Profile/Profile';
+import { StudentsReportScene } from '../components/StudentsReportScene/StudentsReportScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -36,7 +38,8 @@ export const App = () => (
       <Header />
       <MainContainer>
         <Switch>
-          <Route exact path={'/'} component={Home} />
+          <Route exact path={UI_URLS.home} component={Home} />
+          <Route exact path={UI_URLS.profile} component={Profile} />
 
           <Route path={UI_URLS.auth.login} component={LoginScene} />
           <Route path={UI_URLS.auth.forgotPassword} component={ForgotScene} />
@@ -101,6 +104,10 @@ export const App = () => (
           <Route
             path={UI_URLS.report.sessionAccess}
             component={GroupSessionAccessReportScene}
+          />
+          <Route
+            path={UI_URLS.report.students}
+            component={StudentsReportScene}
           />
         </Switch>
       </MainContainer>
