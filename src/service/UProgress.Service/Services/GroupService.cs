@@ -19,7 +19,7 @@ public class GroupService
 
     public async Task<Guid> CreateGroup(int startYear, int graduatedYear, int number, Guid headId, Guid specialityId)
     {
-        var speciality = _specialityRepository.GetById(specialityId);
+        var speciality = await _specialityRepository.GetById(specialityId);
         var groupName = $"{speciality.ShortName} {startYear}-{number}";
         var group = new Group
         {
@@ -39,7 +39,7 @@ public class GroupService
 
     public async Task<bool> DeleteGroup(Guid id)
     {
-        var group = _groupRepository.GetById(id);
+        var group = await _groupRepository.GetById(id);
         if (group == null)
         {
             return false;

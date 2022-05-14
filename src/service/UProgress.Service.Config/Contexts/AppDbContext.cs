@@ -150,7 +150,7 @@ public sealed class AppDbContext : DbContext
             .WithMany(u => u.StudentTaskAnswers)
             .HasForeignKey(ta => ta.StudentId);
         modelBuilder.Entity<TaskAnswer>().HasOne(ta => ta.ApprovedBy)
-            .WithMany(u => u.TeacherApprovedTaskAnswers)
+            .WithMany(u => u.TeacherApprovedTaskAnswers).IsRequired(false)
             .HasForeignKey(ta => ta.ApprovedById);
 
         #endregion

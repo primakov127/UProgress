@@ -12,7 +12,8 @@ public class AuthService
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly UserService _userService;
 
-    public AuthService(UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager, UserService userService)
+    public AuthService(UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager,
+        UserService userService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -41,7 +42,7 @@ public class AuthService
         }
 
         var userClaims = await GetUserRolesClaims(user);
-        
+
         var idClaim = new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
         userClaims.Add(idClaim);
 
@@ -137,10 +138,10 @@ public class AuthService
 
         var roles = _roleManager.Roles.Where(role => userRoles.Contains(role.Name)).ToList();
 
-        var getClaimsAsyncTasks = roles.Select(role => _roleManager.GetClaimsAsync(role)).ToList();
-        await Task.WhenAny(getClaimsAsyncTasks);
-
-        getClaimsAsyncTasks.ForEach(task => userClaims.AddRange(task.Result));
+        foreach (var role in roles)
+        {
+            userClaims.AddRange(await _roleManager.GetClaimsAsync(role));
+        }
 
         return userClaims;
     }

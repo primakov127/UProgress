@@ -1,10 +1,20 @@
-import { useEffectAsync } from '@ui/app-shell';
+import { useEffectAsync, UserType } from '@ui/app-shell';
 import {
   EditOutlined,
   UserDeleteOutlined,
   UserAddOutlined,
+  SearchOutlined,
+  ClearOutlined,
 } from '@ant-design/icons';
-import { Button, Empty, List, notification, Tooltip } from 'antd';
+import {
+  Button,
+  Empty,
+  Input,
+  List,
+  notification,
+  Select,
+  Tooltip,
+} from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserListItem } from '../../models/UserListItem';
@@ -15,6 +25,10 @@ import { UI_URLS } from '../../constants';
 
 export const UserListScene = () => {
   const [users, setUsers] = useState<UserListItem[]>();
+  const [filter, setFilter] = useState<{
+    search?: string;
+    userTypes?: UserType[];
+  }>();
 
   useEffectAsync(async () => {
     const result = await userService.getUserList();
@@ -49,23 +63,85 @@ export const UserListScene = () => {
     notification.error({ message: 'Не удалось активировать пользователя' });
   };
 
+  const filterUser = (
+    user: UserListItem,
+    userTypes?: UserType[],
+    search?: string
+  ): boolean => {
+    let result = true;
+
+    if (search && userTypes) {
+      return (
+        user.fullName.toLowerCase().includes(search.toLowerCase()) &&
+        // eslint-disable-next-line eqeqeq
+        userTypes.find((ut) => ut == user.userType) !== undefined
+      );
+    }
+
+    if (search) {
+      result = user.fullName.toLowerCase().includes(search.toLowerCase());
+    }
+
+    if (userTypes && userTypes.length > 0) {
+      // eslint-disable-next-line eqeqeq
+      result = userTypes.find((ut) => ut == user.userType) !== undefined;
+    }
+
+    return result;
+  };
+
+  const clearFilter = () => {
+    setFilter(undefined);
+  };
+
   return (
     <div>
       {users ? (
         <Container>
-          <Link to={UI_URLS.user.add}>
-            <Button type="dashed" icon={<UserAddOutlined />}>
-              Добавить пользователя
+          <div className="conrtols-container">
+            <Input
+              placeholder="ФИО"
+              value={filter?.search}
+              onChange={(e) =>
+                setFilter((prev) => ({ ...prev, search: e.target.value }))
+              }
+            />
+            <Select
+              mode="multiple"
+              placeholder="Выберите тип..."
+              onChange={(e) => setFilter((prev) => ({ ...prev, userTypes: e }))}
+              value={filter?.userTypes}
+            >
+              <Select.Option key={UserType.Dean}>Декан</Select.Option>
+              <Select.Option key={UserType.Teacher}>
+                Преподаватель
+              </Select.Option>
+              <Select.Option key={UserType.Student}>Студент</Select.Option>
+            </Select>
+            <Button
+              onClick={clearFilter}
+              type="dashed"
+              icon={<ClearOutlined />}
+            >
+              Сброс
             </Button>
-          </Link>
+            <Link to={UI_URLS.user.add}>
+              <Button type="dashed" icon={<UserAddOutlined />}>
+                Добавить пользователя
+              </Button>
+            </Link>
+          </div>
           <List
+            pagination={{ pageSize: 10 }}
             size="large"
             itemLayout="horizontal"
-            dataSource={users}
+            dataSource={users.filter((u) =>
+              filterUser(u, filter?.userTypes, filter?.search)
+            )}
             renderItem={(u) => (
               <List.Item
                 actions={[
-                  <Link to={`${UI_URLS.user.view}/${u.id}`}>
+                  <Link to={UI_URLS.user.view.url(u.id)}>
                     <EditOutlined />
                   </Link>,
                   <Tooltip
@@ -92,9 +168,7 @@ export const UserListScene = () => {
                 <List.Item.Meta
                   avatar={<UserTypeIcon userType={u.userType} />}
                   title={
-                    <Link to={`${UI_URLS.user.view}/${u.id}`}>
-                      {u.fullName}
-                    </Link>
+                    <Link to={UI_URLS.user.view.url(u.id)}>{u.fullName}</Link>
                   }
                 />
               </List.Item>
@@ -108,4 +182,26 @@ export const UserListScene = () => {
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  .conrtols-container {
+    display: flex;
+    padding-bottom: 20px;
+
+    .ant-select {
+      width: 300px;
+      margin-left: 10px;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      margin-left: 10px;
+    }
+
+    a {
+      margin-left: auto;
+    }
+  }
+`;

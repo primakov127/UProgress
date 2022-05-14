@@ -1,26 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  Speciality,
   SubGroupType,
   useEffectAsync,
   useLoading,
-  UserRole,
 } from '@ui/app-shell';
 import {
   Button,
   DatePicker,
   Form,
-  Input,
   InputNumber,
   notification,
   Select,
   Transfer,
 } from 'antd';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
-import { Speciality } from '../../models/Speciality';
 import { StudentListItem } from '../../models/StudentListItem';
 import { groupService } from '../../services/groupService';
 import { userService } from '../../services/userService';
@@ -60,7 +58,7 @@ export const AddGroupScene = () => {
       setSpecialities(getSpecialityListResult.list);
     }
 
-    const getStudentListResult = await userService.getStudentList();
+    const getStudentListResult = await userService.getStudentWithoutGroupList();
     if (getStudentListResult.isSuccessful) {
       setStudents(getStudentListResult.list);
     }
@@ -106,7 +104,7 @@ export const AddGroupScene = () => {
 
   return (
     <Container>
-      <Form form={form} onSubmitCapture={handleAdd}>
+      <Form form={form} onSubmitCapture={handleAdd} labelCol={{ span: 3 }}>
         <Form.Item
           name="years"
           label="Период обучения"
@@ -122,7 +120,14 @@ export const AddGroupScene = () => {
         <Form.Item
           name="number"
           label="Номер группы"
-          rules={[{ required: true, message: 'Выберите номер группы' }]}
+          rules={[
+            {
+              required: true,
+              type: 'number',
+              message: 'Введите положительный номер группы',
+              min: 1,
+            },
+          ]}
         >
           <InputNumber disabled={loading} />
         </Form.Item>
@@ -247,14 +252,24 @@ export const AddGroupScene = () => {
           />
         </Form.Item>
 
-        <Button block type="primary" htmlType="submit" loading={loading}>
-          Создать
-        </Button>
-        <Link to={UI_URLS.user.list}>
-          <Button type="primary" danger>
-            Отменить
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <Link
+            style={{ marginLeft: 'auto', display: 'block' }}
+            to={UI_URLS.group.list}
+          >
+            <Button type="primary" danger>
+              Вернуться к списку
+            </Button>
+          </Link>
+          <Button
+            style={{ marginLeft: '5px' }}
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+          >
+            Создать
           </Button>
-        </Link>
+        </div>
       </Form>
     </Container>
   );

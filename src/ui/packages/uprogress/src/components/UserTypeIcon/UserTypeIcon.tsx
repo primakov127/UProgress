@@ -3,12 +3,21 @@ import { Avatar, Tooltip } from 'antd';
 
 type Props = {
   userType: UserType;
+  noTooltip?: boolean;
 };
 
-export const UserTypeIcon = ({ userType }: Props) => {
+export const UserTypeIcon = ({ userType, noTooltip }: Props) => {
   switch (userType) {
     case UserType.Dean:
-      return (
+      return noTooltip ? (
+        <Avatar
+          style={{
+            backgroundColor: '#1890ff',
+          }}
+        >
+          Д
+        </Avatar>
+      ) : (
         <Tooltip title="Декан" placement="top">
           <Avatar
             style={{
@@ -20,7 +29,15 @@ export const UserTypeIcon = ({ userType }: Props) => {
         </Tooltip>
       );
     case UserType.Teacher:
-      return (
+      return noTooltip ? (
+        <Avatar
+          style={{
+            backgroundColor: '#1890ff',
+          }}
+        >
+          П
+        </Avatar>
+      ) : (
         <Tooltip title="Преподаватель" placement="top">
           <Avatar
             style={{
@@ -33,7 +50,15 @@ export const UserTypeIcon = ({ userType }: Props) => {
       );
     case UserType.Student:
     default:
-      return (
+      return noTooltip ? (
+        <Avatar
+          style={{
+            backgroundColor: '#1890ff',
+          }}
+        >
+          С
+        </Avatar>
+      ) : (
         <Tooltip title="Студент" placement="top">
           <Avatar
             style={{

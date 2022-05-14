@@ -2,13 +2,14 @@ import {
   useEffectAsync,
   useLoading,
   User,
+  useRole,
   UserRole,
   UserType,
 } from '@ui/app-shell';
 import { Button, Form, Input, notification, Radio, Select } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { UI_URLS } from '../../constants';
 import { userService } from '../../services/userService';
@@ -17,32 +18,37 @@ export const ViewUserScene = () => {
   const [form] = Form.useForm();
   const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState<User>();
-  const history = useHistory();
   const { loading, loadingHandler } = useLoading();
+  const [userType, setUserType] = useState<UserType>();
+  const { isAdmin } = useRole();
 
   useEffectAsync(async () => {
     const result = await userService.getUser({ userId: userId });
     if (result.isSuccessful) {
       setUser(result);
+      setUserType(result.userType);
     }
   }, [userId]);
 
-  const handleAdd = loadingHandler(async () => {
+  const handleUpdate = loadingHandler(async () => {
     try {
       const values = await form.validateFields();
-      const result = await userService.createUser({
+      const result = await userService.updateUser({
+        id: userId,
         fullName: values.fullName,
         username: values.username,
         email: values.email,
         phone: values.phone,
         password: values.password,
-        userType: values.userType,
         userRoles: values.roles,
       });
 
       if (result.isSuccessful) {
-        notification.success({ message: 'Пользователь успешно создан' });
-        history.push(UI_URLS.user.list);
+        notification.success({ message: 'Пользователь изменен' });
+        const result = await userService.getUser({ userId: userId });
+        if (result.isSuccessful) {
+          setUser(result);
+        }
       }
     } catch (e: unknown) {
       if (!axios.isAxiosError(e)) {
@@ -56,7 +62,7 @@ export const ViewUserScene = () => {
       {user && (
         <Form
           form={form}
-          onSubmitCapture={handleAdd}
+          onSubmitCapture={handleUpdate}
           initialValues={{
             fullName: user.fullName,
             username: user.username,
@@ -65,25 +71,31 @@ export const ViewUserScene = () => {
             userType: user.userType,
             roles: user.userRoles,
           }}
+          labelCol={{ span: 2 }}
         >
           <Form.Item
             name="fullName"
             label="ФИО"
             rules={[{ required: true, message: 'Введите ФИО' }]}
           >
-            <Input disabled={loading} placeholder="Иванов Иван Иванович" />
+            <Input
+              disabled={loading || !isAdmin}
+              placeholder="Иванов Иван Иванович"
+            />
           </Form.Item>
 
-          <Form.Item
-            name="username"
-            label="Username"
-            rules={[{ required: true, message: 'Введите Username' }]}
-          >
-            <Input disabled={loading} placeholder="user12345" />
-          </Form.Item>
+          {isAdmin && (
+            <Form.Item
+              name="username"
+              label="Username"
+              rules={[{ required: true, message: 'Введите Username' }]}
+            >
+              <Input disabled={loading || !isAdmin} placeholder="user12345" />
+            </Form.Item>
+          )}
 
           <Form.Item name="phone" label="Номер телефона">
-            <Input disabled={loading} placeholder="+375447843293" />
+            <Input disabled={loading || !isAdmin} placeholder="+375447843293" />
           </Form.Item>
 
           <Form.Item
@@ -97,16 +109,21 @@ export const ViewUserScene = () => {
               },
             ]}
           >
-            <Input disabled={loading} placeholder="example@gmail.com" />
+            <Input
+              disabled={loading || !isAdmin}
+              placeholder="example@gmail.com"
+            />
           </Form.Item>
 
-          <Form.Item
-            name="password"
-            label="Пароль"
-            rules={[{ required: true, message: 'Введите Пароль' }]}
-          >
-            <Input disabled={loading} placeholder="pa$$w0rD" />
-          </Form.Item>
+          {isAdmin && (
+            <Form.Item
+              name="password"
+              label="Пароль"
+              rules={[{ min: 3, message: 'Минимальная длина 3' }]}
+            >
+              <Input disabled={loading || !isAdmin} placeholder="pa$$w0rD" />
+            </Form.Item>
+          )}
 
           <Form.Item
             name="userType"
@@ -118,7 +135,11 @@ export const ViewUserScene = () => {
               },
             ]}
           >
-            <Radio.Group buttonStyle="solid" disabled>
+            <Radio.Group
+              buttonStyle="solid"
+              disabled
+              onChange={(e) => setUserType(e.target.value)}
+            >
               <Radio.Button value={UserType.Dean}>Декан</Radio.Button>
               <Radio.Button value={UserType.Teacher}>
                 Преподаватель
@@ -129,38 +150,67 @@ export const ViewUserScene = () => {
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item
-            name="roles"
-            label="Роли"
-            rules={[
-              {
-                required: true,
-                message: 'Выберите хотя бы одну роль',
-              },
-            ]}
-          >
-            <Select
-              mode="multiple"
-              placeholder="Выберите роль..."
-              disabled={loading}
+          {isAdmin && (
+            <Form.Item
+              name="roles"
+              label="Роли"
+              rules={[
+                {
+                  required: true,
+                  message: 'Выберите хотя бы одну роль',
+                },
+              ]}
             >
-              <Select.Option key={UserRole.Admin}>Админ</Select.Option>
-              <Select.Option key={UserRole.Teacher}>
-                Преподаватель
-              </Select.Option>
-              <Select.Option key={UserRole.Student}>Студент</Select.Option>
-              <Select.Option key={UserRole.GroupHead}>Староста</Select.Option>
-            </Select>
-          </Form.Item>
+              <Select
+                mode="multiple"
+                placeholder="Выберите роль..."
+                disabled={loading || !isAdmin}
+              >
+                {(userType === UserType.Teacher ||
+                  userType === UserType.Dean) && (
+                  <Select.Option key={UserRole.Admin}>Админ</Select.Option>
+                )}
+                {(userType === UserType.Teacher ||
+                  userType === UserType.Dean) && (
+                  <Select.Option key={UserRole.Teacher}>
+                    Преподаватель
+                  </Select.Option>
+                )}
+                {userType === UserType.Student && (
+                  <Select.Option key={UserRole.Student}>Студент</Select.Option>
+                )}
+                {userType === UserType.Student && (
+                  <Select.Option key={UserRole.GroupHead}>
+                    Староста
+                  </Select.Option>
+                )}
+              </Select>
+            </Form.Item>
+          )}
 
-          <Button block type="primary" htmlType="submit" loading={loading}>
-            Сохранить
-          </Button>
-          <Link to={UI_URLS.user.list}>
-            <Button type="primary" danger>
-              Отменить
-            </Button>
-          </Link>
+          {isAdmin && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'end',
+                paddingTop: '20px',
+              }}
+            >
+              <Link to={UI_URLS.user.list}>
+                <Button type="primary" danger>
+                  Вернуться к списку
+                </Button>
+              </Link>
+              <Button
+                style={{ marginLeft: '5px' }}
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+              >
+                Сохранить
+              </Button>
+            </div>
+          )}
         </Form>
       )}
     </Container>

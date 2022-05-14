@@ -1,5 +1,5 @@
+import { UpdateUser, UpdateUserResult } from './../models/messages/UpdateUser';
 import { User } from '@ui/app-shell';
-import { message } from 'antd';
 import { API_URLS } from '../constants';
 import {
   ActivateUser,
@@ -72,6 +72,20 @@ const createUser = async (message: CreateUser): Promise<CreateUserResult> => {
   }
 };
 
+const updateUser = async (message: UpdateUser): Promise<UpdateUserResult> => {
+  try {
+    await getHttpClient().post(API_URLS.user.updateUser, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateUserResult;
+  }
+};
+
 const deactivateUser = async (
   message: DeactivateUser
 ): Promise<DeactivateUserResult> => {
@@ -128,9 +142,42 @@ const getUser = async (message: GetUser): Promise<GetUserResult> => {
   }
 };
 
+const getStudentWithoutGroupList = async (): Promise<GetStudentListResult> => {
+  try {
+    const result = (
+      await getHttpClient().get(API_URLS.user.getStudentWithoutGroupList)
+    ).data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetStudentListResult;
+  }
+};
+
 const getStudentList = async (): Promise<GetStudentListResult> => {
   try {
     const result = (await getHttpClient().get(API_URLS.user.getStudentList))
+      .data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetStudentListResult;
+  }
+};
+
+const getTeacherList = async (): Promise<GetStudentListResult> => {
+  try {
+    const result = (await getHttpClient().get(API_URLS.user.getTeacherList))
       .data;
 
     return {
@@ -151,5 +198,8 @@ export const userService = {
   deactivateUser,
   activateUser,
   getUser,
+  getStudentWithoutGroupList,
   getStudentList,
+  getTeacherList,
+  updateUser,
 };

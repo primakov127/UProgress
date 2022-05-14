@@ -270,7 +270,6 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                         .HasColumnType("text");
 
                     b.Property<Guid?>("ApprovedById")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<int?>("Mark")
@@ -509,9 +508,7 @@ namespace UProgress.Service.Config.Migrations.AppDatabase
                 {
                     b.HasOne("UProgress.Contracts.Models.User", "ApprovedBy")
                         .WithMany("TeacherApprovedTaskAnswers")
-                        .HasForeignKey("ApprovedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApprovedById");
 
                     b.HasOne("UProgress.Contracts.Models.User", "Student")
                         .WithMany("StudentTaskAnswers")

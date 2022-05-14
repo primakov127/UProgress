@@ -15,7 +15,7 @@ var frontendUrl = builder.Configuration.GetValue<string>("FrontendBaseUrl");
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -71,10 +71,21 @@ builder.Services.AddSingleton<IEmailService>(new EmailService(
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<GroupService>();
+builder.Services.AddScoped<DisciplineService>();
+builder.Services.AddScoped<AssignService>();
+builder.Services.AddScoped<TaskAnswerService>();
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<GroupRepository>();
+builder.Services.AddScoped<DisciplineRepository>();
 builder.Services.AddScoped<SpecialityRepository>();
+builder.Services.AddScoped<TaskRepository>();
+builder.Services.AddScoped<StudentDisciplineRepository>();
+builder.Services.AddScoped<TeacherGroupDisciplineRepository>();
+builder.Services.AddScoped<TaskAnswerRepository>();
+builder.Services.AddScoped<AnswerHistoryRepository>();
+builder.Services.AddScoped<TaskAttachmentRepository>();
+builder.Services.AddScoped<AnswerAttachmentRepository>();
 
 var app = builder.Build();
 

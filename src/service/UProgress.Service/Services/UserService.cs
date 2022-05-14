@@ -52,7 +52,7 @@ public class UserService
 
     public async Task<bool> DeactivateUser(Guid id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetById(id);
         if (user == null)
         {
             return false;
@@ -67,7 +67,7 @@ public class UserService
 
     public async Task<bool> ActivateUser(Guid id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetById(id);
         if (user == null)
         {
             return false;
@@ -82,7 +82,7 @@ public class UserService
 
     public async Task<bool> IsActiveUser(Guid id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetById(id);
 
         return user is {IsActive: true};
     }
@@ -103,5 +103,15 @@ public class UserService
     public List<User> GetAllWithoutGroupStudents()
     {
         return _userRepository.Get().Where(u => u.Role == UserType.Student && u.GroupId == null).ToList();
+    }
+
+    public List<User> GetAllStudents()
+    {
+        return _userRepository.Get().Where(u => u.Role == UserType.Student).ToList();
+    }
+
+    public List<User> GetAllTeachers()
+    {
+        return _userRepository.Get().Where(u => u.Role == UserType.Teacher || u.Role == UserType.Dean).ToList();
     }
 }

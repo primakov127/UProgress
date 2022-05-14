@@ -13,9 +13,9 @@ public class GroupRepository : IRepository<Group>
         _context = context;
     }
 
-    public Group? GetById(object id)
+    public async Task<Group?> GetById(object id)
     {
-        return _context.Groups.Find(id);
+        return await _context.Groups.FindAsync(id);
     }
 
     public IQueryable<Group> Get()

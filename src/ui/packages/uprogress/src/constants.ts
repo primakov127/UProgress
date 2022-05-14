@@ -1,3 +1,5 @@
+import { SubGroupType } from '@ui/app-shell';
+
 export const COOKIES = {
   authCookie: 'uprogress-st',
 };
@@ -16,21 +18,65 @@ export const API_URLS = {
     getCurrentUser: 'user/getcurrentuser',
     getUserList: 'user/getuserlist',
     createUser: 'user/create',
+    updateUser: 'user/update',
     deactivateUser: 'user/deactivate',
     activateUser: 'user/activate',
     getUser: 'user/getuser',
+    getStudentWithoutGroupList: 'user/getstudentwithoutgrouplist',
     getStudentList: 'user/getstudentlist',
+    getTeacherList: 'user/getteacherlist',
   },
   group: {
     createGroup: 'group/create',
     getGroupList: 'group/getgrouplist',
     deleteGroup: 'group/delete',
     getSpecialityList: 'group/getspecialitylist',
+    getGroup: 'group/getgroup',
+    updateGroup: 'group/updategroup',
+    removeGroupStudent: 'group/removegroupstudent',
+    addGroupStudent: 'group/addgroupstudent',
+  },
+  discipline: {
+    createDiscipline: 'discipline/create',
+    getDisciplineList: 'discipline/getdisciplinelist',
+    deleteDiscipline: 'discipline/delete',
+    createTask: 'discipline/createtask',
+    deleteTask: 'discipline/deletetask',
+    getDiscipline: 'discipline/getdiscipline',
+    getTask: 'discipline/gettask',
+    myDisciplines: 'discipline/mydisciplines',
+    studentDisciplines: 'discipline/studentdisciplines',
+    updateDiscipline: 'discipline/updatediscipline',
+    updateTask: 'discipline/updatetask',
+  },
+  assign: {
+    assignDisciplineToStudent: 'assign/assigndisciplinetostudent',
+    assignDisciplineToGroup: 'assign/assigndisciplinetogroup',
+    myGroupDisciplines: 'assign/mygroupdisciplines',
+    getGroupDiscipline: 'assign/getgroupdiscipline',
+    getGroupSessionAccess: 'assign/getgroupsessionaccess',
+    changeFinalMarks: 'assign/changefinalmarks',
+    selectStudents: 'assign/selectstudents',
+  },
+  taskAnswer: {
+    createTaskAnswer: 'taskanswer/createtaskanswer',
+    getTaskAnswer: 'taskanswer/gettaskanswer',
+    requestApprove: 'taskanswer/requestapprove',
+    approve: 'taskanswer/approve',
+    reject: 'taskanswer/reject',
+  },
+  file: {
+    uploadTaskAttachment: 'file/uploadtaskattachment',
+    uploadAnswerAttachment: 'file/uploadanswerattachment',
+    download: 'file/download',
+    remove: 'file/remove',
   },
 };
 
 export const UI_URLS = {
   home: '/',
+  profile: '/myprofile',
+  myProgress: '/myprogress',
   auth: {
     login: '/auth/login',
     forgotPassword: '/auth/forgotpassword',
@@ -39,11 +85,74 @@ export const UI_URLS = {
   user: {
     list: '/user/list',
     add: '/user/add',
-    view: '/user/view',
+    view: {
+      template: '/user/view/:userId',
+      url: (userId: string) => `/user/view/${userId}`,
+    },
   },
   group: {
     list: '/group/list',
     add: '/group/add',
-    view: '/group/view',
+    view: {
+      template: '/group/view/:groupId',
+      url: (groupId: string) => `/group/view/${groupId}`,
+    },
+  },
+  discipline: {
+    mylist: '/discipline/my',
+    list: '/discipline/list',
+    add: '/discipline/add',
+    view: {
+      template: '/discipline/view/:disciplineId',
+      url: (disciplineId: string) => `/discipline/view/${disciplineId}`,
+    },
+    addTask: {
+      template: '/discipline/addtask/:disciplineId',
+      url: (disciplineId: string) => `/discipline/addtask/${disciplineId}`,
+    },
+    viewTask: {
+      template: '/discipline/:disciplineId/viewtask/:taskId',
+      url: (disciplineId: string, taskId: string) =>
+        `/discipline/${disciplineId}/viewtask/${taskId}`,
+    },
+  },
+  taskAnswer: {
+    add: {
+      template: '/taskanswer/add/:taskId',
+      url: (taskId: string) => `/taskanswer/add/${taskId}`,
+    },
+    view: {
+      template: '/taskanswer/view/:taskAnswerId',
+      url: (taskAnswerId: string) => `/taskanswer/view/${taskAnswerId}`,
+    },
+  },
+  teacher: {
+    my: '/teacher/mygroupsdisciplines',
+    group: {
+      template:
+        '/teacher/group/:groupId/discipline/:disciplineId/subgroup/:subGroupType',
+      url: (
+        groupId: string,
+        disciplineId: string,
+        subGroupType: SubGroupType
+      ) =>
+        `/teacher/group/${groupId}/discipline/${disciplineId}/subgroup/${subGroupType}`,
+    },
+    changeFinalMark: {
+      template:
+        '/teacher/changemark/group/:groupId/discipline/:disciplineId/subgroup/:subGroupType',
+      url: (
+        groupId: string,
+        disciplineId: string,
+        subGroupType: SubGroupType
+      ) =>
+        `/teacher/changemark/group/${groupId}/discipline/${disciplineId}/subgroup/${subGroupType}`,
+    },
+  },
+  report: {
+    groupDiscipline: '/report/groupdiscipline',
+    sessionAccess: '/report/sessionaccess',
+    students: '/report/students',
+    studentProgress: '/report/studentprogress',
   },
 };

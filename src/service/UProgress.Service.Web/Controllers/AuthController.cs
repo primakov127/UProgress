@@ -1,4 +1,5 @@
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UProgress.Contracts.Messages;
 using UProgress.Service.Interfaces;
@@ -69,8 +70,15 @@ public class AuthController : ControllerBase
         var passwordResetLink =
             $"{_frontendBaseUrl}/auth/resetpassword/?token={encodedResetToken}&email={message.Email}";
 
-        _emailService.SendEmail(message.Email, "UProgress: Восстановление пароля",
-            $"<a href='{passwordResetLink}'>Восстановить пароль</a>");
+        try
+        {
+            _emailService.SendEmail(message.Email, "UProgress: Восстановление пароля",
+                $"<a href='{passwordResetLink}'>Восстановить пароль</a>");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
         return Ok();
     }

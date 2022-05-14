@@ -13,9 +13,9 @@ public class UserRepository : IRepository<User>
         _context = context;
     }
 
-    public User? GetById(object id)
+    public async Task<User?> GetById(object id)
     {
-        return _context.Users.Find(id);
+        return await _context.Users.FindAsync(id);
     }
 
     public IQueryable<User> Get()
