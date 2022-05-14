@@ -16,6 +16,7 @@ import {
   notification,
   Spin,
   Tag,
+  Upload,
 } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
@@ -23,8 +24,10 @@ import ReactMarkdown from 'react-markdown';
 import { Link, useParams } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 import styled from 'styled-components';
-import { UI_URLS } from '../../constants';
+import { config } from '../../config';
+import { API_URLS, UI_URLS } from '../../constants';
 import { GetTaskAnswerResult } from '../../models/messages/GetTaskAnswer';
+import { fileService } from '../../services/fileService';
 import { taskAnswerService } from '../../services/taskAnswerService';
 import { MarkdownContainer } from '../MarkdownContainer/MarkdownContainer';
 import { UserTypeIcon } from '../UserTypeIcon/UserTypeIcon';
@@ -223,6 +226,44 @@ export const ViewTaskAnswerScene = () => {
             </Button>
           )}
         </Form>
+        <h3>Приложения к ответу:</h3>
+        <Upload
+          onChange={(e) => {
+            setTimeout(async () => {
+              const result = await taskAnswerService.getTaskAnswer({
+                taskAnswerId: taskAnswerId,
+              });
+              if (result.isSuccessful) {
+                setTaskAnswer(result);
+              }
+            }, 300);
+          }}
+          name="files"
+          showUploadList={{ showRemoveIcon: isStudent }}
+          action={`${config.apiUrl}${API_URLS.file.uploadAnswerAttachment}/${taskAnswer.id}`}
+          multiple
+          fileList={taskAnswer.attachments.map((a) => ({
+            uid: a.id,
+            name: `${a.name}.${a.extension}`,
+            url: `${config.apiUrl}${API_URLS.file.download}/${a.id}`,
+          }))}
+          onRemove={async (file) => {
+            const result = await fileService.remove(file.uid);
+
+            const resultd = await taskAnswerService.getTaskAnswer({
+              taskAnswerId: taskAnswerId,
+            });
+            if (resultd.isSuccessful) {
+              setTaskAnswer(resultd);
+            }
+
+            return result.isSuccessful;
+          }}
+        >
+          {isStudent && taskAnswer.status !== AnswerStatus.Approved && (
+            <Button>Загрузить</Button>
+          )}
+        </Upload>
         <Card
           title={
             isStudent && taskAnswer?.status !== AnswerStatus.Approved

@@ -32,6 +32,15 @@ public class GetTaskAnswerResult
     public Guid DisciplineId { get; set; }
     public string DisciplineName { get; set; }
     public List<GetTaskAnswerResultHistory> History { get; set; }
+    public IEnumerable<GetTaskAnswerResultAttachment> Attachments { get; set; }
+}
+
+public class GetTaskAnswerResultAttachment
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Extension { get; set; }
+    public Guid AnswerId { get; set; }
 }
 
 public class GetTaskAnswerResultHistory

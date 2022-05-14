@@ -84,6 +84,8 @@ builder.Services.AddScoped<StudentDisciplineRepository>();
 builder.Services.AddScoped<TeacherGroupDisciplineRepository>();
 builder.Services.AddScoped<TaskAnswerRepository>();
 builder.Services.AddScoped<AnswerHistoryRepository>();
+builder.Services.AddScoped<TaskAttachmentRepository>();
+builder.Services.AddScoped<AnswerAttachmentRepository>();
 
 var app = builder.Build();
 

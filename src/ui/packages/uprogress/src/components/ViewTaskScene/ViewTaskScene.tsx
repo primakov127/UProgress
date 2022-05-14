@@ -5,18 +5,22 @@ import {
   Descriptions,
   Form,
   Input,
+  notification,
   Spin,
   Switch,
   Tag,
+  Upload,
 } from 'antd';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import remarkGfm from 'remark-gfm';
 import styled from 'styled-components';
-import { UI_URLS } from '../../constants';
+import { config } from '../../config';
+import { API_URLS, UI_URLS } from '../../constants';
 import { GetTaskResult } from '../../models/messages/GetTask';
 import { disciplineService } from '../../services/disciplineService';
+import { fileService } from '../../services/fileService';
 import { MarkdownContainer } from '../MarkdownContainer/MarkdownContainer';
 
 export const ViewTaskScene = () => {
@@ -44,6 +48,21 @@ export const ViewTaskScene = () => {
     setIsLoading(false);
   }, [taskId]);
 
+  const handleUpdate = loadingHandler(async () => {
+    const { name, description, isRequired } = await form.validateFields();
+
+    const result = await disciplineService.updateTask({
+      id: taskId,
+      name: name,
+      description: description,
+      isRequired: isRequired,
+    });
+
+    if (result.isSuccessful) {
+      notification.success({ message: 'Задание обновлено' });
+    }
+  });
+
   return isLoading ? (
     <Spin spinning size="large" />
   ) : task ? (
@@ -51,7 +70,7 @@ export const ViewTaskScene = () => {
       {isAdmin && (
         <Form
           form={form}
-          onSubmitCapture={() => console.log('ViewTaskScene Add')}
+          onSubmitCapture={handleUpdate}
           initialValues={{
             name: task?.name,
             isRequired: task?.isRequired,
@@ -66,7 +85,11 @@ export const ViewTaskScene = () => {
             <Input disabled={loading} placeholder="Базы данных" />
           </Form.Item>
 
-          <Form.Item name="isRequired" label="Обязательно для выполнения">
+          <Form.Item
+            name="isRequired"
+            label="Обязательно для выполнения"
+            valuePropName="checked"
+          >
             <Switch
               disabled={loading}
               checkedChildren="Да"
@@ -111,6 +134,42 @@ export const ViewTaskScene = () => {
           </div>
         </Form>
       )}
+      <h3>Приложения к заданию:</h3>
+      <Upload
+        onChange={(e) => {
+          setTimeout(async () => {
+            const result = await disciplineService.getTask({
+              taskId: taskId,
+            });
+            if (result.isSuccessful) {
+              setTask(result);
+            }
+          }, 300);
+        }}
+        name="files"
+        showUploadList={{ showRemoveIcon: isAdmin }}
+        action={`${config.apiUrl}${API_URLS.file.uploadTaskAttachment}/${task.id}`}
+        multiple
+        fileList={task.attachments.map((a) => ({
+          uid: a.id,
+          name: `${a.name}.${a.extension}`,
+          url: `${config.apiUrl}${API_URLS.file.download}/${a.id}`,
+        }))}
+        onRemove={async (file) => {
+          const result = await fileService.remove(file.uid);
+
+          const resultd = await disciplineService.getTask({
+            taskId: taskId,
+          });
+          if (resultd.isSuccessful) {
+            setTask(resultd);
+          }
+
+          return result.isSuccessful;
+        }}
+      >
+        {isAdmin && <Button>Загрузить</Button>}
+      </Upload>
       {!isAdmin && (
         <Descriptions
           title={

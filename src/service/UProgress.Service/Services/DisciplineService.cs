@@ -38,7 +38,7 @@ public class DisciplineService
 
     public async Task<bool> DeleteDiscipline(Guid id)
     {
-        var discipline = _disciplineRepository.GetById(id);
+        var discipline = await _disciplineRepository.GetById(id);
         if (discipline == null)
         {
             return false;
@@ -68,7 +68,7 @@ public class DisciplineService
     
     public async Task<bool> DeleteTask(Guid id)
     {
-        var task = _taskRepository.GetById(id);
+        var task = await _taskRepository.GetById(id);
         if (task == null)
         {
             return false;

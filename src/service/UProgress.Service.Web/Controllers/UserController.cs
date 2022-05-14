@@ -129,8 +129,15 @@ public class UserController : ControllerBase
         var emailConfirmationLink =
             $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/api/auth/confirm?email={user.Email}&emailConfirmToken={encodedEmailConfirmationToken}";
 
-        _emailService.SendEmail(message.Email, "UProgress: Подтверждение почты",
-            $"<a href='{emailConfirmationLink}'>Подтвердить почту</a>");
+        try
+        {
+            _emailService.SendEmail(message.Email, "UProgress: Подтверждение почты",
+                $"<a href='{emailConfirmationLink}'>Подтвердить почту</a>");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
         return Ok(new CreateUserResult
         {

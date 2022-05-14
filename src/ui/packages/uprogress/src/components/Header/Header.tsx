@@ -73,6 +73,11 @@ export const Header = () => {
           <Menu.Item key={UI_URLS.report.students}>
             <Link to={UI_URLS.report.students}>Выборка студентов</Link>
           </Menu.Item>
+          <Menu.Item key={UI_URLS.report.studentProgress}>
+            <Link to={UI_URLS.report.studentProgress}>
+              Успеваемость студента
+            </Link>
+          </Menu.Item>
         </Menu.SubMenu>
       )}
 

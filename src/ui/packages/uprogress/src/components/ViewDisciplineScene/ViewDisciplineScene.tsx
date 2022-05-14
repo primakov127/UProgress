@@ -61,6 +61,24 @@ export const ViewDisciplineScene = () => {
     setIsLoading(false);
   }, [disciplineId]);
 
+  const handleUpdate = loadingHandler(async () => {
+    const { name, description, semester, type, specialityId } =
+      await form.validateFields();
+
+    const result = await disciplineService.updateDiscipline({
+      id: disciplineId,
+      name: name,
+      description: description,
+      semester: semester,
+      type: type,
+      specialityId: specialityId,
+    });
+
+    if (result.isSuccessful) {
+      notification.success({ message: 'Дисциплина обновлена' });
+    }
+  });
+
   const showTaskDeleteConfirm = (id: string, name: string) => {
     Modal.confirm({
       title: `Вы хотите удалить задание: ${name} ?`,
@@ -90,7 +108,7 @@ export const ViewDisciplineScene = () => {
       {isAdmin && (
         <Form
           form={form}
-          onSubmitCapture={() => console.log('ViewDisciplineScene Add')}
+          onSubmitCapture={handleUpdate}
           initialValues={{
             name: discipline?.name,
             semester: discipline?.semester,
@@ -214,7 +232,7 @@ export const ViewDisciplineScene = () => {
               htmlType="submit"
               loading={loading}
             >
-              Создать
+              Изменить
             </Button>
           </div>
         </Form>

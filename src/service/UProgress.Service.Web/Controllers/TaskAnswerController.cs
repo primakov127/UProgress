@@ -52,7 +52,7 @@ public class TaskAnswerController : ControllerBase
         }
 
         var taskAnswer = _taskAnswerRepository.Get().Include(ta => ta.History).ThenInclude(h => h.User)
-            .Include(ta => ta.Task).ThenInclude(t => t.Discipline)
+            .Include(ta => ta.Task).ThenInclude(t => t.Discipline).Include(ta => ta.Attachments)
             .FirstOrDefault(ta => ta.Id == message.TaskAnswerId);
         if (taskAnswer == null)
         {
@@ -83,7 +83,14 @@ public class TaskAnswerController : ControllerBase
                     UserId = h.User.Id,
                     FullName = h.User.FullName
                 }
-            }).ToList()
+            }).ToList(),
+            Attachments = taskAnswer.Attachments.Select(a => new GetTaskAnswerResultAttachment
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Extension = a.Extension,
+                AnswerId = a.AnswerId
+            })
         };
 
         return Ok(result);

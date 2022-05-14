@@ -32,6 +32,7 @@ import { ViewGroupScene } from '../components/ViewGroupScene/ViewGroupScene';
 import { Profile } from '../components/Profile/Profile';
 import { StudentsReportScene } from '../components/StudentsReportScene/StudentsReportScene';
 import { MyProgress } from '../components/MyProgress/MyProgress';
+import { StudentProgressReportScene } from '../components/StudentProgressReportScene/StudentProgressReportScene';
 
 export const App = () => (
   <RecoilRoot>
@@ -110,6 +111,10 @@ export const App = () => (
           <Route
             path={UI_URLS.report.students}
             component={StudentsReportScene}
+          />
+          <Route
+            path={UI_URLS.report.studentProgress}
+            component={StudentProgressReportScene}
           />
         </Switch>
       </MainContainer>

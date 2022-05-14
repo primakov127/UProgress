@@ -55,6 +55,7 @@ const getTaskAnswer = async (
       disciplineId: result.disciplineId,
       disciplineName: result.disciplineName,
       history: result.history,
+      attachments: result.attachments,
     };
   } catch (e: unknown) {
     return {

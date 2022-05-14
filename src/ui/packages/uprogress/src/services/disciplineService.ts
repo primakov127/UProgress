@@ -1,3 +1,7 @@
+import {
+  GetStudentDisciplines,
+  GetStudentDisciplinesResult,
+} from './../models/messages/GetStudentDisciplines';
 import { GetTask, GetTaskResult } from './../models/messages/GetTask';
 import {
   GetDiscipline,
@@ -18,6 +22,11 @@ import {
 import { Discipline, Speciality, Task } from '@ui/app-shell';
 import { DeleteTask, DeleteTaskResult } from '../models/messages/DeleteTask';
 import { GetMyDisciplinesResult } from '../models/messages/GetMyDisciplines';
+import { UpdateTask, UpdateTaskResult } from '../models/messages/UpdateTask';
+import {
+  UpdateDiscipline,
+  UpdateDisciplineResult,
+} from '../models/messages/UpdateDiscipline';
 
 const createDiscipline = async (
   message: CreateDiscipline
@@ -35,6 +44,22 @@ const createDiscipline = async (
     return {
       isSuccessful: false,
     } as CreateDisciplineResult;
+  }
+};
+
+const updateDiscipline = async (
+  message: UpdateDiscipline
+): Promise<UpdateDisciplineResult> => {
+  try {
+    await getHttpClient().post(API_URLS.discipline.updateDiscipline, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateDisciplineResult;
   }
 };
 
@@ -114,6 +139,20 @@ const createTask = async (message: CreateTask): Promise<CreateTaskResult> => {
   }
 };
 
+const updateTask = async (message: UpdateTask): Promise<UpdateTaskResult> => {
+  try {
+    await getHttpClient().post(API_URLS.discipline.updateTask, message);
+
+    return {
+      isSuccessful: true,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as UpdateTaskResult;
+  }
+};
+
 const deleteTask = async (message: DeleteTask): Promise<DeleteTaskResult> => {
   try {
     await getHttpClient().post(API_URLS.discipline.deleteTask, message);
@@ -143,6 +182,7 @@ const getTask = async (message: GetTask): Promise<GetTaskResult> => {
       disciplineId: result.disciplineId,
       disciplineName: result.disciplineName,
       taskAnswerId: result.taskAnswerId,
+      attachments: result.attachments,
     };
   } catch (e: unknown) {
     return {
@@ -168,6 +208,28 @@ const getMyDisciplines = async (): Promise<GetMyDisciplinesResult> => {
   }
 };
 
+const getStudentDisciplines = async (
+  message: GetStudentDisciplines
+): Promise<GetStudentDisciplinesResult> => {
+  try {
+    const result = (
+      await getHttpClient().post(
+        API_URLS.discipline.studentDisciplines,
+        message
+      )
+    ).data;
+
+    return {
+      isSuccessful: true,
+      list: result,
+    };
+  } catch (e: unknown) {
+    return {
+      isSuccessful: false,
+    } as GetStudentDisciplinesResult;
+  }
+};
+
 export const disciplineService = {
   createDiscipline,
   getDisciplineList,
@@ -177,4 +239,7 @@ export const disciplineService = {
   deleteTask,
   getTask,
   getMyDisciplines,
+  getStudentDisciplines,
+  updateDiscipline,
+  updateTask,
 };

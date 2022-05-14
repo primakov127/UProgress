@@ -1,4 +1,5 @@
 import { BaseResult } from './BaseResult';
+
 export type CreateTask = {
   disciplineId: string;
   name: string;

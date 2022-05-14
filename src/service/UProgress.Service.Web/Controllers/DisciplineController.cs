@@ -19,10 +19,12 @@ public class DisciplineController : ControllerBase
     private readonly TaskAnswerRepository _taskAnswerRepository;
     private readonly DisciplineService _disciplineService;
     private readonly UserService _userService;
+    private readonly UserRepository _userRepository;
+    private readonly UnitOfWork _unitOfWork;
 
     public DisciplineController(DisciplineService disciplineService, DisciplineRepository disciplineRepository,
         TaskRepository taskRepository, UserService userService, StudentDisciplineRepository studentDisciplineRepository,
-        TaskAnswerRepository taskAnswerRepository)
+        TaskAnswerRepository taskAnswerRepository, UserRepository userRepository, UnitOfWork unitOfWork)
     {
         _disciplineService = disciplineService;
         _disciplineRepository = disciplineRepository;
@@ -30,6 +32,8 @@ public class DisciplineController : ControllerBase
         _userService = userService;
         _studentDisciplineRepository = studentDisciplineRepository;
         _taskAnswerRepository = taskAnswerRepository;
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpPost("create")]
@@ -78,6 +82,56 @@ public class DisciplineController : ControllerBase
         {
             return BadRequest();
         }
+
+        return Ok();
+    }
+    
+    [HttpPost("updatediscipline")]
+    public async Task<IActionResult> UpdateDiscipline(UpdateDiscipline message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var discipline = _disciplineRepository.Get().FirstOrDefault(d => d.Id == message.Id);
+        if (discipline == null)
+        {
+            return BadRequest();
+        }
+
+        discipline.Name = message.Name;
+        discipline.Description = message.Description;
+        discipline.Semester = message.Semester;
+        discipline.Type = message.Type;
+        discipline.SpecialityId = message.SpecialityId;
+
+        _disciplineRepository.Update(discipline);
+        await _unitOfWork.SaveAsync();
+
+        return Ok();
+    }
+    
+    [HttpPost("updatetask")]
+    public async Task<IActionResult> UpdateTask(UpdateTask message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var task = _taskRepository.Get().FirstOrDefault(t => t.Id == message.Id);
+        if (task == null)
+        {
+            return BadRequest();
+        }
+
+        task.Name = message.Name;
+        task.Description = message.Description;
+        task.IsRequired = message.IsRequired;
+
+        _taskRepository.Update(task);
+        await _unitOfWork.SaveAsync();
 
         return Ok();
     }
@@ -162,7 +216,8 @@ public class DisciplineController : ControllerBase
             return BadRequest();
         }
 
-        var task = _taskRepository.Get().Include(t => t.Discipline).FirstOrDefault(t => t.Id == message.TaskId);
+        var task = _taskRepository.Get().Include(t => t.Discipline).Include(t => t.Attachments)
+            .FirstOrDefault(t => t.Id == message.TaskId);
         if (task == null)
         {
             return BadRequest();
@@ -180,7 +235,14 @@ public class DisciplineController : ControllerBase
             IsRequired = task.IsRequired,
             DisciplineId = task.DisciplineId,
             DisciplineName = task.Discipline.Name,
-            TaskAnswerId = taskAnswer?.Id
+            TaskAnswerId = taskAnswer?.Id,
+            Attachments = task.Attachments.Select(a => new GetTaskResultAttachment
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Extension = a.Extension,
+                TaskId = a.TaskId
+            })
         };
 
         return Ok(result);
@@ -204,6 +266,40 @@ public class DisciplineController : ControllerBase
             .Include(sd => sd.Discipline).ThenInclude(d => d.Speciality).Include(sd => sd.Discipline)
             .ThenInclude(d => d.Tasks).ThenInclude(t => t.Answers).Select(sd =>
                 new GetMyDisciplinesResult
+                {
+                    Id = sd.Discipline.Id,
+                    Name = sd.Discipline.Name,
+                    Semester = sd.Discipline.Semester,
+                    Type = sd.Discipline.Type,
+                    SpecialityShortName = sd.Discipline.Speciality.ShortName,
+                    FinalMark = sd.Mark,
+                    Progress = (int) ((double) sd.Discipline.Tasks.Select(t =>
+                            t.Answers.FirstOrDefault(a =>
+                                a.StudentId == sd.StudentId && a.Status == AnswerStatus.Approved))
+                        .Count(ta => ta != null) / (double) sd.Discipline.Tasks.Count * 100)
+                });
+
+        return Ok(result);
+    }
+
+    [HttpPost("studentdisciplines")]
+    public async Task<IActionResult> GetStudentDisciplines(GetStudentDisciplines message)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var student = await _userRepository.GetById(message.StudentId);
+        if (student == null)
+        {
+            return BadRequest();
+        }
+
+        var result = _studentDisciplineRepository.Get().Where(sd => sd.StudentId == student.Id)
+            .Include(sd => sd.Discipline).ThenInclude(d => d.Speciality).Include(sd => sd.Discipline)
+            .ThenInclude(d => d.Tasks).ThenInclude(t => t.Answers).Select(sd =>
+                new GetStudentDisciplinesResult
                 {
                     Id = sd.Discipline.Id,
                     Name = sd.Discipline.Name,

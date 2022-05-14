@@ -1,7 +1,8 @@
 import { DisciplineType } from './../../../../app-shell/src/models/DisciplineType';
 import { BaseResult } from './BaseResult';
 
-export type CreateDiscipline = {
+export type UpdateDiscipline = {
+  id: string;
   name: string;
   description: string;
   semester: number;
@@ -9,6 +10,4 @@ export type CreateDiscipline = {
   specialityId: string;
 };
 
-export type CreateDisciplineResult = BaseResult & {
-  id: string;
-};
+export type UpdateDisciplineResult = BaseResult;

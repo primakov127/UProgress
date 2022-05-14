@@ -45,6 +45,9 @@ export const API_URLS = {
     getDiscipline: 'discipline/getdiscipline',
     getTask: 'discipline/gettask',
     myDisciplines: 'discipline/mydisciplines',
+    studentDisciplines: 'discipline/studentdisciplines',
+    updateDiscipline: 'discipline/updatediscipline',
+    updateTask: 'discipline/updatetask',
   },
   assign: {
     assignDisciplineToStudent: 'assign/assigndisciplinetostudent',
@@ -61,6 +64,12 @@ export const API_URLS = {
     requestApprove: 'taskanswer/requestapprove',
     approve: 'taskanswer/approve',
     reject: 'taskanswer/reject',
+  },
+  file: {
+    uploadTaskAttachment: 'file/uploadtaskattachment',
+    uploadAnswerAttachment: 'file/uploadanswerattachment',
+    download: 'file/download',
+    remove: 'file/remove',
   },
 };
 
@@ -144,5 +153,6 @@ export const UI_URLS = {
     groupDiscipline: '/report/groupdiscipline',
     sessionAccess: '/report/sessionaccess',
     students: '/report/students',
+    studentProgress: '/report/studentprogress',
   },
 };

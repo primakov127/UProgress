@@ -39,7 +39,7 @@ public class GroupService
 
     public async Task<bool> DeleteGroup(Guid id)
     {
-        var group = _groupRepository.GetById(id);
+        var group = await _groupRepository.GetById(id);
         if (group == null)
         {
             return false;
